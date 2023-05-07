@@ -4,15 +4,25 @@ services:
   course:
     build:
       context: .
-      dockerfile: course/Dockerfile
-    restart: on-failure
-    container_name: course-core
+      dockerfile: /course/Dockerfile
     ports:
-      - 8090:8080
-      - 5005:5005
-  db:
-    image: 'postgres:13.1-alpine'
-    container_name: db
+      - "8080:8080"
+    container_name: course-core
     environment:
-    - POSTGRES_USER=compose-postgres
-    - POSTGRES_PASSWORD=compose-postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/course
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL-AUTO=none
+    depends_on:
+      - database
+  database:
+    image: 'postgres:13.1-alpine'
+    container_name: database
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data

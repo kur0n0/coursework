@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+postgres-data
+course/.mvn
+course/mvnw*
