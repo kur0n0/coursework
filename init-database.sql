@@ -1,0 +1,1 @@
+SELECT 'CREATE DATABASE course' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'course')\gexec
