@@ -33,7 +33,7 @@ public class SequenceGenerator {
                 .upsert(true);
 
         DatabaseSequence counter = mongoOperations.findAndModify(query,
-                new Update().inc("seq", 1),
+                new Update().inc("sequence", 1),
                 options,
                 DatabaseSequence.class);
         return !Objects.isNull(counter) ? counter.getSequence() : 1;
