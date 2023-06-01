@@ -2,13 +2,13 @@ version: "3.8"
 
 services:
   course:
+    container_name: course-core
     build:
       context: .
-      dockerfile: /course/Dockerfile
+      dockerfile: Dockerfile-core
     ports:
       - "8080:8080"
       - "5005:5005"
-    container_name: course-core
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/course
       - SPRING_DATASOURCE_USERNAME=postgres
@@ -18,8 +18,8 @@ services:
     depends_on:
       - postgres
   postgres:
-    image: 'postgres:13.1-alpine'
     container_name: postgres
+    image: 'postgres:13.1-alpine'
     ports:
       - "5432:5432"
     environment:
@@ -29,22 +29,22 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
       - ./init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
   course-file-storage:
+    container_name: course-file-storage
     build:
       context: .
-      dockerfile: /course-file-storage/Dockerfile
+      dockerfile: Dockerfile-file-storage
     ports:
       - "8090:8090"
-    container_name: course-file-storage
     environment:
       - SPRING.DATA.MONGODB.URI=mongodb://admin:admin@mongodatabase:27017/?authSource=files
       - SPRING.DATA.MONGODB.DATABASE=files
     depends_on:
       - mongodatabase
   mongodatabase:
+    container_name: mongodb
     image: mongo:5.0
     ports:
       - "27017:27017"
-    container_name: mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
