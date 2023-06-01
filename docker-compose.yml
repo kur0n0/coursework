@@ -4,8 +4,8 @@ services:
   course:
     container_name: course-core
     build:
-      context: .
-      dockerfile: Dockerfile-core
+      context: ./course
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
       - "5005:5005"
@@ -31,8 +31,8 @@ services:
   course-file-storage:
     container_name: course-file-storage
     build:
-      context: .
-      dockerfile: Dockerfile-file-storage
+      context: ./course-file-storage
+      dockerfile: Dockerfile
     ports:
       - "8090:8090"
     environment:
