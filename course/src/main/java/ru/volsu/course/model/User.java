@@ -1,18 +1,19 @@
 package ru.volsu.course.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Table(name="users", schema = "public")
 public class User implements UserDetails {
 
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer userId;
 
     private String name;
 
@@ -26,12 +27,12 @@ public class User implements UserDetails {
 
     private String role;
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(Integer userId) {
+        this.userId = userId;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getUserId() {
+        return userId;
     }
 
     @Override

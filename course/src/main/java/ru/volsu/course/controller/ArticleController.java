@@ -8,7 +8,7 @@ import ru.volsu.course.service.ArticleService;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/article")
+@RequestMapping(value = "/api/article")
 public class ArticleController {
 
     @Autowired
