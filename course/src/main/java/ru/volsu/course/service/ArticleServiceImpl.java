@@ -3,6 +3,8 @@ package ru.volsu.course.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.volsu.course.dao.ArticleRepository;
 import ru.volsu.course.model.Article;
@@ -41,5 +43,10 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<Article> findAll() {
         return articleRepository.findAll();
+    }
+
+    @Override
+    public Page<Article> findAll(PageRequest pageRequest) {
+        return articleRepository.findAll(pageRequest);
     }
 }

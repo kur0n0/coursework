@@ -1,5 +1,7 @@
 package ru.volsu.course.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import ru.volsu.course.model.Article;
 
 import java.util.List;
@@ -13,4 +15,6 @@ public interface ArticleService {
     void delete(Integer articleId);
 
     List<Article> findAll();
+
+    Page<Article> findAll(PageRequest pageRequest);
 }

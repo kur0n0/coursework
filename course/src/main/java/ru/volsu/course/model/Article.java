@@ -21,6 +21,7 @@ public class Article implements Serializable {
 
     @ElementCollection
     @CollectionTable(name = "files", joinColumns = @JoinColumn(name = "article_id"))
+    @Column(name = "file_uuid")
     private List<String> filesUuidList;
 
     public Integer getArticleId() {

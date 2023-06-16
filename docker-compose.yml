@@ -16,7 +16,8 @@ services:
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       - SPRING_JPA_HIBERNATE_DDL-AUTO=none
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
   postgres:
     container_name: postgres
     image: 'postgres:13.1-alpine'
