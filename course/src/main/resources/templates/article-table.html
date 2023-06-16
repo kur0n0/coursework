@@ -13,14 +13,14 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Title</th>
-            <th scope="col">Tag</th>
+            <th scope="col">Идентификатор</th>
+            <th scope="col">Название</th>
+            <th scope="col">Предмет</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="article : ${articlePage.getContent()}">
-            <td><span th:text="${article.articleId}"></span></td>
+            <td><a th:href="@{/admin/article/one(articleId=${article.articleId})}"><span th:text="${article.articleId}"/></a></td>
             <td><span th:text="${article.title}"></span></td>
             <td><span th:text="${article.tag}"></span></td>
         </tr>

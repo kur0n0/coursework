@@ -26,9 +26,9 @@ public class FileController {
 
     @PostMapping
     public ResponseEntity saveFile(@RequestParam String title,
-                                   @RequestParam MultipartFile file) throws IOException {
+                                   @RequestParam byte[] file) throws IOException {
         File newFile = new File();
-        newFile.setFile(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
+        newFile.setFile(new Binary(BsonBinarySubType.BINARY, file));
         newFile.setTitle(title);
 
         HashMap<String, Object> response = new HashMap<>();
