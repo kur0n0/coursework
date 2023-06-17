@@ -7,10 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.coursefilestorage.model.File;
+import ru.volsu.coursefilestorage.model.FileDto;
+import ru.volsu.coursefilestorage.model.FileRequest;
 import ru.volsu.coursefilestorage.service.FileService;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/file")
@@ -20,8 +23,13 @@ public class FileController {
     private FileService fileService;
 
     @GetMapping(value = "/{uuid}")
-    public File getFile(@PathVariable String uuid) {
-        return fileService.getFile(uuid);
+    public FileDto getFile(@PathVariable String uuid) {
+        return fileService.getFileDto(uuid);
+    }
+
+    @GetMapping(value = "/batch")
+    public List<FileDto> getBatchFiles(@RequestBody FileRequest fileRequest) {
+        return fileService.getBatchFileDto(fileRequest);
     }
 
     @PostMapping

@@ -22,6 +22,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.course.dao.ArticleRepository;
 import ru.volsu.course.model.Article;
+import ru.volsu.course.model.ArticleDto;
+import ru.volsu.course.model.FileDto;
+import ru.volsu.course.model.FileRequest;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -47,6 +50,24 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public ArticleDto getOne(Integer articleId) throws Exception {
+        Article article = findById(articleId);
+
+        FileRequest fileRequest = new FileRequest(article.getFilesUuidList());
+        ResponseEntity<FileDto[]> responseEntity;
+        try {
+            responseEntity = restTemplate.postForEntity("/api/file/batch", fileRequest, FileDto[].class);
+        } catch (RestClientException e) {
+            log.error("При получении списка файлов по статье: {} возникла ошибка: {}", article.getArticleId(), e.getMessage());
+            throw new Exception("Сетевая ошибка при получении списка файлов"); // todo создать свое исключение
+        }
+
+        FileDto[] fileDtoArray = responseEntity.getBody();
+
+        return new ArticleDto(article, fileDtoArray);
+    }
+
+    @Override
     @Transactional
     public void save(Article article, MultipartFile[] files) throws Exception {
         article = articleRepository.save(article);
@@ -68,7 +89,7 @@ public class ArticleServiceImpl implements ArticleService {
             try {
                 responseEntity = restTemplate.postForEntity("/api/file", request, String.class);
             } catch (RestClientException e) {
-                log.error("Сетевая ошибка при запросе создания файла: {}", e.getMessage());
+                log.error("При запросе создания файла: {} возникла сетевая ошибка: {}", article.getArticleId(), e.getMessage());
                 throw new Exception("Сетевая ошибка при запросе создания файла: " + e.getMessage()); // todo создать свое исключение
             }
 
