@@ -15,6 +15,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=admin
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       - SPRING_JPA_HIBERNATE_DDL-AUTO=none
+      - files.api.url=127.0.0.1:8090
     depends_on:
       postgres:
         condition: service_started

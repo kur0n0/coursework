@@ -23,7 +23,7 @@ import java.util.stream.IntStream;
 @RequestMapping(value = "/admin")
 public class AdminController {
 
-    private static final String ARTICLE_FORM_URL = "/article-form";
+    private static final String ARTICLE_FORM_URL = "article-form";
 
     @Autowired
     private ArticleService articleService;
@@ -35,7 +35,7 @@ public class AdminController {
 
     @GetMapping(value = "/article-form")
     public String articleForm() {
-        return "/article-form";
+        return "article-form";
     }
 
     @PostMapping(value = "/article")
@@ -52,7 +52,7 @@ public class AdminController {
                           @RequestParam Optional<Integer> page,
                           @RequestParam Optional<Integer> size) {
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
+        int pageSize = size.orElse(1);
 
         Page<Article> articlePage = articleService.findAll(PageRequest.of(currentPage - 1, pageSize));
         model.addAttribute("articlePage", articlePage);
@@ -64,7 +64,7 @@ public class AdminController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        return "/article-table.html";
+        return "article-table.html";
     }
 
     @GetMapping(value = "/article/one")
@@ -72,7 +72,7 @@ public class AdminController {
                          Model model) {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
-        return "/article-one.html";
+        return "article-one.html";
     }
 
 //    @PutMapping(value = "/article")
