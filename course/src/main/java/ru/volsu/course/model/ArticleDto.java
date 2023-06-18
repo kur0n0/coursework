@@ -1,16 +1,12 @@
 package ru.volsu.course.model;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
-@Entity
-@Table(name = "articles")
-public class Article implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ArticleDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "article_id")
     private Integer articleId;
 
     private String text;
@@ -19,10 +15,18 @@ public class Article implements Serializable {
 
     private String tag;
 
-    @ElementCollection
-    @CollectionTable(name = "files", joinColumns = @JoinColumn(name = "article_id"))
-    @Column(name = "file_uuid")
-    private List<String> filesUuidList;
+    private List<FileDto> fileDtoList;
+
+    public ArticleDto() {
+    }
+
+    public ArticleDto(Article article, List<FileDto> fileDtoList) {
+        this.articleId = article.getArticleId();
+        this.text = article.getText();
+        this.title = article.getTitle();
+        this.tag = article.getTag();
+        this.fileDtoList = fileDtoList;
+    }
 
     public Integer getArticleId() {
         return articleId;
@@ -56,11 +60,11 @@ public class Article implements Serializable {
         this.tag = tag;
     }
 
-    public List<String> getFilesUuidList() {
-        return filesUuidList;
+    public List<FileDto> getFileDtoList() {
+        return fileDtoList;
     }
 
-    public void setFilesUuidList(List<String> filesUuidList) {
-        this.filesUuidList = filesUuidList;
+    public void setFileDtoList(List<FileDto> fileDtoList) {
+        this.fileDtoList = fileDtoList;
     }
 }

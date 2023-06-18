@@ -8,15 +8,17 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-      - "5005:5005"
+#      - "5005:5005"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/course
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=admin
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       - SPRING_JPA_HIBERNATE_DDL-AUTO=none
+      - FILES.API.URL=http://192.168.0.129:8090
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
   postgres:
     container_name: postgres
     image: 'postgres:13.1-alpine'
@@ -35,6 +37,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8090:8090"
+      - "5005:5005"
     environment:
       - SPRING.DATA.MONGODB.URI=mongodb://admin:admin@mongodatabase:27017/?authSource=files
       - SPRING.DATA.MONGODB.DATABASE=files
