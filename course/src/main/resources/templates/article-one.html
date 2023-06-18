@@ -10,9 +10,13 @@
 </head>
 <body>
 <div class="container-fluid p-5 text-center">
-    <p>Название статьи: <span th:text="${article.title}"/></p>
-    <p>Предмет статьи: <span th:text="${article.tag}"/></p>
-    <p>Текст статьи: <span th:text="${article.text}"/></p>
+    <p>Название статьи: <span th:text="${articleDto.title}"/></p>
+    <p>Предмет статьи: <span th:text="${articleDto.tag}"/></p>
+    <p>Текст статьи: <span th:text="${articleDto.text}"/></p>
+    <p>Файлы</p>
+    <p th:each="fileDto: ${articleDto.fileDtoList}">
+        <img width="350" height="350" th:src="@{'data:image/jpg;base64,'+${fileDto.file}}" />
+    </p>
 </div>
 
 </body>

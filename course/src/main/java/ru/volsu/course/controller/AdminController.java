@@ -5,13 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 import ru.volsu.course.model.Article;
+import ru.volsu.course.model.ArticleDto;
 import ru.volsu.course.service.ArticleService;
 
 import java.util.List;
@@ -52,7 +49,7 @@ public class AdminController {
                           @RequestParam Optional<Integer> page,
                           @RequestParam Optional<Integer> size) {
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(1);
+        int pageSize = size.orElse(5);
 
         Page<Article> articlePage = articleService.findAll(PageRequest.of(currentPage - 1, pageSize));
         model.addAttribute("articlePage", articlePage);
@@ -69,24 +66,11 @@ public class AdminController {
 
     @GetMapping(value = "/article/one")
     public String getOne(@RequestParam Integer articleId,
-                         Model model) {
-        Article article = articleService.findById(articleId);
-        model.addAttribute("article", article);
+                         Model model) throws Exception {
+        ArticleDto articleDto = articleService.getOne(articleId);
+        model.addAttribute("articleDto", articleDto);
         return "article-one.html";
     }
-
-//    @PutMapping(value = "/article")
-//    public void updateArticle(@RequestParam Integer articleId,
-//                              @RequestParam String text,
-//                              @RequestParam String title,
-//                              @RequestParam String tag) {
-//        Article article = articleService.findById(articleId);
-//        article.setText(text);
-//        article.setTitle(title);
-//        article.setTag(tag);
-//
-//        articleService.save(article);
-//    }
 
     @DeleteMapping(value = "/article")
     public void deleteArticle(@RequestParam Integer articleId) {

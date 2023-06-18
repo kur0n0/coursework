@@ -27,7 +27,7 @@
         </tbody>
     </table>
     <nav aria-label="pagination">
-        <ul th:if="${articlePage.totalPages > 1}" class="pagination pagination-lg justify-content-center">
+        <ul th:if="${articlePage.totalPages > 0}" class="pagination pagination-lg justify-content-center">
             <li class="page-item"
                 th:each="pageNumber : ${pageNumbers}"
                 th:classappend="${pageNumber==articlePage.number + 1} ? active"

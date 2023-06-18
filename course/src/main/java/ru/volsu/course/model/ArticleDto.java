@@ -2,9 +2,6 @@ package ru.volsu.course.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -23,12 +20,12 @@ public class ArticleDto {
     public ArticleDto() {
     }
 
-    public ArticleDto(Article article, FileDto[] fileDtos) {
+    public ArticleDto(Article article, List<FileDto> fileDtoList) {
         this.articleId = article.getArticleId();
         this.text = article.getText();
         this.title = article.getTitle();
         this.tag = article.getTag();
-        this.fileDtoList = Arrays.asList(fileDtos);
+        this.fileDtoList = fileDtoList;
     }
 
     public Integer getArticleId() {
