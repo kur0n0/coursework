@@ -13,7 +13,6 @@ import ru.volsu.coursefilestorage.model.FileRequest;
 import ru.volsu.coursefilestorage.service.FileService;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
