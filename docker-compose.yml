@@ -30,21 +30,8 @@ services:
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
       - ./init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
-  course-file-storage:
-    container_name: course-file-storage
-    build:
-      context: ./course-file-storage
-      dockerfile: Dockerfile
-    ports:
-      - "8090:8090"
-      - "5005:5005"
-    environment:
-      - SPRING.DATA.MONGODB.URI=mongodb://admin:admin@mongodatabase:27017/?authSource=files
-      - SPRING.DATA.MONGODB.DATABASE=files
-    depends_on:
-      - mongodatabase
   mongodatabase:
-    container_name: mongodb
+    container_name: mongodatabase
     image: mongo:5.0
     ports:
       - "27017:27017"
@@ -55,3 +42,25 @@ services:
     volumes:
       - ./mongodb-data:/data/db
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  course-file-storage:
+    container_name: course-file-storage
+    build:
+      context: ./course-file-storage
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+#      - "5005:5005"
+    environment:
+      - SPRING.DATA.MONGODB.URI=mongodb://admin:admin@mongodatabase:27017/?authSource=files
+      - SPRING.DATA.MONGODB.DATABASE=files
+    depends_on:
+      mongodatabase:
+        condition: service_started
+  course-bot:
+    container_name: course-bot
+    build:
+      context: ./course-bot
+      dockerfile: Dockerfile
+    ports:
+      - "8070:8070"
+      - "5005:5005"
