@@ -65,12 +65,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> findAll() {
-        return articleRepository.findAll();
+    public Page<Article> findAll(PageRequest pageRequest) {
+        return articleRepository.findAll(pageRequest);
     }
 
     @Override
-    public Page<Article> findAll(PageRequest pageRequest) {
-        return articleRepository.findAll(pageRequest);
+    public Page<Article> findAllByTag(String tag, PageRequest pageRequest) {
+        return articleRepository.findAllByTag(tag, pageRequest);
     }
 }

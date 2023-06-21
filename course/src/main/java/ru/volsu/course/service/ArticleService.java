@@ -18,7 +18,7 @@ public interface ArticleService {
 
     void delete(Integer articleId);
 
-    List<Article> findAll();
-
     Page<Article> findAll(PageRequest pageRequest);
+
+    Page<Article> findAllByTag(String tag, PageRequest pageRequest);
 }
