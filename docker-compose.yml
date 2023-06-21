@@ -15,7 +15,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=admin
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       - SPRING_JPA_HIBERNATE_DDL-AUTO=none
-      - FILES.API.URL=http://192.168.0.129:8090
+      - FILES.API.URL=http://host.docker.internal:8090
     depends_on:
       postgres:
         condition: service_started
@@ -56,11 +56,20 @@ services:
     depends_on:
       mongodatabase:
         condition: service_started
+  localtunnel:
+    image: efrecon/localtunnel
+    container_name: localtunnel
+    command:
+      --local-host host.docker.internal --port 8070 --subdomain course-volsu-bot1
   course-bot:
     container_name: course-bot
     build:
       context: ./course-bot
       dockerfile: Dockerfile
+    environment:
+      - WEBHOOK.PATH=https://course-volsu-bot1.local.lt
     ports:
       - "8070:8070"
       - "5005:5005"
+    depends_on:
+      - localtunnel
