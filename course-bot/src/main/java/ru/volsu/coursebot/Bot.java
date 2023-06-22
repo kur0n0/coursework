@@ -2,6 +2,7 @@ package ru.volsu.coursebot;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -42,7 +43,14 @@ public class Bot extends SpringWebhookBot {
         };
 
         userCacheService.setBotSectionForUser(userId, botSectionEnum);
-        return botSectionProcessor.handle(botSectionEnum, update);
+        try {
+            return botSectionProcessor.handle(botSectionEnum, update);
+        } catch (Exception e) {
+            return SendMessage.builder()
+                    .chatId(userId.toString())
+                    .text("Возникла ошибка: " + e.getMessage())
+                    .build();// todo Сделать свои экспешены и хэндлеры для него, отправлять сообщение в боте с описанием ошибки
+        }
     }
 
     @Override

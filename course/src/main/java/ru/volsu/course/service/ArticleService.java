@@ -20,5 +20,5 @@ public interface ArticleService {
 
     Page<Article> findAll(PageRequest pageRequest);
 
-    Page<Article> findAllByTag(String tag, PageRequest pageRequest);
+    List<Article> findByTag(String tag, PageRequest pageRequest);
 }

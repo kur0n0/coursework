@@ -1,7 +1,6 @@
 package ru.volsu.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +19,9 @@ public class ArticleController {
     private ArticleService articleService;
 
     @GetMapping(value = "/page")
-    public Page<Article> getPage(@RequestParam Integer page,
+    public List<Article> getPage(@RequestParam Integer page,
                                  @RequestParam Integer size,
                                  @RequestParam String tag) {
-        return articleService.findAllByTag(tag, PageRequest.of(page, size));
+        return articleService.findByTag(tag, PageRequest.of(page, size));
     }
 }

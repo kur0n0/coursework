@@ -27,4 +27,19 @@ public class KeyBoardConfiguration {
 
         return replyKeyboardMarkup;
     }
+
+    @Bean
+    public ReplyKeyboardMarkup continueKeyboard() {
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(new KeyboardButton("Продолжить"));
+        List<KeyboardRow> keyboard = List.of(row1);
+
+        ReplyKeyboardMarkup continueKeyboard = new ReplyKeyboardMarkup();
+        continueKeyboard.setKeyboard(keyboard);
+        continueKeyboard.setSelective(true);
+        continueKeyboard.setResizeKeyboard(true);
+        continueKeyboard.setOneTimeKeyboard(false);
+
+        return continueKeyboard;
+    }
 }

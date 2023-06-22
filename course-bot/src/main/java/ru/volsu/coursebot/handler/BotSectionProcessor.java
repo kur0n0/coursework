@@ -22,7 +22,7 @@ public class BotSectionProcessor {
                 .collect(Collectors.toMap(MessageHandler::getBotState, Function.identity()));
     }
 
-    public SendMessage handle(BotSectionEnum botSectionEnum, Update update) {
+    public SendMessage handle(BotSectionEnum botSectionEnum, Update update) throws Exception {
         return messageHandlers.get(botSectionEnum).handle(update);
     }
 }
