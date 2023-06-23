@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.course.model.Article;
 import ru.volsu.course.model.ArticleDto;
+import ru.volsu.course.model.ArticleFilesDto;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface ArticleService {
 
     Page<Article> findAll(PageRequest pageRequest);
 
-    List<Article> findByTag(String tag, PageRequest pageRequest);
+    ArticleFilesDto findByTag(String tag, PageRequest pageRequest) throws Exception;
 }

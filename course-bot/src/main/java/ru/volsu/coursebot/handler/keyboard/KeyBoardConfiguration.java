@@ -23,7 +23,7 @@ public class KeyBoardConfiguration {
         replyKeyboardMarkup.setKeyboard(keyboard);
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
 
         return replyKeyboardMarkup;
     }
@@ -38,7 +38,7 @@ public class KeyBoardConfiguration {
         continueKeyboard.setKeyboard(keyboard);
         continueKeyboard.setSelective(true);
         continueKeyboard.setResizeKeyboard(true);
-        continueKeyboard.setOneTimeKeyboard(false);
+        continueKeyboard.setOneTimeKeyboard(true);
 
         return continueKeyboard;
     }

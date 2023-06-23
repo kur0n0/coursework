@@ -10,13 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.course.dao.ArticleRepository;
 import ru.volsu.course.model.Article;
 import ru.volsu.course.model.ArticleDto;
+import ru.volsu.course.model.ArticleFilesDto;
 import ru.volsu.course.model.FileDto;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -71,9 +71,14 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> findByTag(String tag, PageRequest pageRequest) {
-        return articleRepository.findByTag(tag, pageRequest)
-                .get()
-                .collect(Collectors.toList());
+    public ArticleFilesDto findByTag(String tag, PageRequest pageRequest) throws Exception {
+        Page<Article> articlePage = articleRepository.findByTag(tag, pageRequest);
+        List<ArticleDto> articleDtoList = new ArrayList<>();
+        for (Article article : articlePage.getContent()) {
+            List<FileDto> files = fileService.getFiles(article.getFilesUuidList(), article.getArticleId());
+            articleDtoList.add(new ArticleDto(article, files));
+        }
+
+        return new ArticleFilesDto(articleDtoList, articlePage.getNumber(), articlePage.getTotalPages());
     }
 }

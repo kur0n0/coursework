@@ -1,9 +1,7 @@
 package ru.volsu.coursebot.service;
 
-import ru.volsu.coursebot.dto.ArticleDto;
-
-import java.util.List;
+import ru.volsu.coursebot.dto.ArticlePage;
 
 public interface CourseCoreService {
-    List<ArticleDto> getPageByTag(Integer page, String tag) throws Exception;
+    ArticlePage getPageByTag(Integer page, String tag) throws Exception;
 }

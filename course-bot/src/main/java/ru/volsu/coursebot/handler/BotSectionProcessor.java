@@ -2,7 +2,7 @@ package ru.volsu.coursebot.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.volsu.coursebot.enums.BotSectionEnum;
 
@@ -22,7 +22,7 @@ public class BotSectionProcessor {
                 .collect(Collectors.toMap(MessageHandler::getBotState, Function.identity()));
     }
 
-    public SendMessage handle(BotSectionEnum botSectionEnum, Update update) throws Exception {
+    public BotApiMethod<?> handle(BotSectionEnum botSectionEnum, Update update) throws Exception {
         return messageHandlers.get(botSectionEnum).handle(update);
     }
 }

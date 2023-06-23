@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.volsu.coursebot.dto.ArticleDto;
+import ru.volsu.coursebot.dto.ArticlePage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,18 +23,18 @@ public class CourseCoreServiceImpl implements CourseCoreService {
 
     Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Integer pageSize = 1;
+    private final Integer pageSize = 3;
 
     @Override
-    public List<ArticleDto> getPageByTag(Integer page, String tag) throws Exception {
-        ResponseEntity<ArticleDto[]> responseEntity;
+    public ArticlePage getPageByTag(Integer page, String tag) throws Exception {
+        ResponseEntity<ArticlePage> responseEntity;
         try {
-            responseEntity = coreTemplate.getForEntity("/api/article/page?page={page}&size={pageSize}&tag={tag}", ArticleDto[].class, page, pageSize, tag);
+            responseEntity = coreTemplate.getForEntity("/api/article/page?page={page}&size={pageSize}&tag={tag}", ArticlePage.class, page, pageSize, tag);
         } catch (RestClientException e) {
             log.error("Ошибка при получении старницы статей: {}", e.getMessage());
             throw new Exception("Ошибка при получении старницы статей: " + e.getMessage());
         }
 
-        return Arrays.asList(responseEntity.getBody());
+        return responseEntity.getBody();
     }
 }
