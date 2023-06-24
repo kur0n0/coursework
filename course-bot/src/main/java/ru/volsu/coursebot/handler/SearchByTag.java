@@ -1,6 +1,7 @@
 package ru.volsu.coursebot.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -25,9 +26,14 @@ import java.util.Map;
 public class SearchByTag implements MessageHandler {
 
     @Autowired
+    @Qualifier(value = "mainMenuKeyboard")
+    private ReplyKeyboardMarkup mainMenuKeyboard;
+
+    @Autowired
     private CourseCoreService courseCoreService;
 
     @Autowired
+    @Qualifier(value = "continueKeyboard")
     private ReplyKeyboardMarkup continueKeyboard;
 
     @Autowired
@@ -106,14 +112,11 @@ public class SearchByTag implements MessageHandler {
                     userPage.remove(userId);
                     userCacheService.setBotSectionForUser(userId, BotSectionEnum.MAIN_MENU);
                     return sendMessageBuilder
+                            .replyMarkup(mainMenuKeyboard)
+                            .parseMode("Markdown")
                             .text("Переход в главное меню")
                             .build();
                 }
-            }
-            default -> {
-                userState.remove(userId);
-                return sendMessageBuilder
-                        .build();
             }
         }
 
@@ -132,7 +135,7 @@ public class SearchByTag implements MessageHandler {
         KeyboardRow nextRow = new KeyboardRow();
         nextRow.add(new KeyboardButton("Следующая страница"));
         KeyboardRow mainRow = new KeyboardRow();
-        mainRow.add(new KeyboardButton("Главное меню"));
+        mainRow.add(new KeyboardButton("В главное меню"));
 
         List<KeyboardRow> keyboard;
         if ((currentPage == totalPages - 1) && totalPages > 1) {

@@ -66,6 +66,7 @@ services:
     build:
       context: ./course-bot
       dockerfile: Dockerfile
+    restart: always
     environment:
       - WEBHOOK.PATH=https://course-volsu-bot1.local.lt
       - CORE_API_URL=http://host.docker.internal:8080

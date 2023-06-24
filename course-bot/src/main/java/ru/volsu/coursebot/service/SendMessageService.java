@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
+import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.volsu.coursebot.Bot;
 import ru.volsu.coursebot.dto.ArticleDto;
@@ -25,7 +26,7 @@ public class SendMessageService {
 
     @Autowired
     @Lazy
-    private Bot bot;
+    private AbsSender bot;
 
     Logger log = LoggerFactory.getLogger(getClass());
 
@@ -56,6 +57,11 @@ public class SendMessageService {
                     sendMediaGroupBuilder.medias(inputMediaPhotoList);
                     try {
                         bot.execute(sendMediaGroupBuilder.build());
+
+                        bot.execute(SendMessage.builder()
+                                .chatId(chatId)
+                                .text(buildText(articleDto))
+                                .build());
                     } catch (TelegramApiException e) {
                         log.error("Ошибка при отправке информации о статье: {}", e.getMessage());
                     }
@@ -74,15 +80,15 @@ public class SendMessageService {
                     } catch (TelegramApiException e) {
                         log.error("Ошибка при отправке информации о статье: {}", e.getMessage());
                     }
-                }
-
-                try {
-                    bot.execute(SendMessage.builder()
-                            .chatId(chatId)
-                            .text(buildText(articleDto))
-                            .build());
-                } catch (TelegramApiException e) {
-                    log.error("Ошибка при отправке информации о статье: {}", e.getMessage());
+                } else {
+                    try {
+                        bot.execute(SendMessage.builder()
+                                .chatId(chatId)
+                                .text(buildText(articleDto))
+                                .build());
+                    } catch (TelegramApiException e) {
+                        log.error("Ошибка при отправке информации о статье: {}", e.getMessage());
+                    }
                 }
             }
         } else {

@@ -29,7 +29,20 @@ public class CourseCoreServiceImpl implements CourseCoreService {
     public ArticlePage getPageByTag(Integer page, String tag) throws Exception {
         ResponseEntity<ArticlePage> responseEntity;
         try {
-            responseEntity = coreTemplate.getForEntity("/api/article/page?page={page}&size={pageSize}&tag={tag}", ArticlePage.class, page, pageSize, tag);
+            responseEntity = coreTemplate.getForEntity("/api/article/tag/page?page={page}&size={pageSize}&tag={tag}", ArticlePage.class, page, pageSize, tag);
+        } catch (RestClientException e) {
+            log.error("Ошибка при получении старницы статей: {}", e.getMessage());
+            throw new Exception("Ошибка при получении старницы статей: " + e.getMessage());
+        }
+
+        return responseEntity.getBody();
+    }
+
+    @Override
+    public ArticlePage getPageByTitle(Integer page, String title) throws Exception {
+        ResponseEntity<ArticlePage> responseEntity;
+        try {
+            responseEntity = coreTemplate.getForEntity("/api/article/title/page?page={page}&size={pageSize}&title={title}", ArticlePage.class, page, pageSize, title);
         } catch (RestClientException e) {
             log.error("Ошибка при получении старницы статей: {}", e.getMessage());
             throw new Exception("Ошибка при получении старницы статей: " + e.getMessage());

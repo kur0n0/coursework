@@ -11,6 +11,9 @@ import ru.volsu.coursebot.enums.BotSectionEnum;
 import ru.volsu.coursebot.handler.BotSectionProcessor;
 import ru.volsu.coursebot.service.UserCacheService;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class Bot extends SpringWebhookBot {
 
     @Autowired
@@ -48,7 +51,9 @@ public class Bot extends SpringWebhookBot {
         } catch (Exception e) {
             return SendMessage.builder()
                     .chatId(userId.toString())
-                    .text("Возникла ошибка: " + e.getMessage())
+                    .text(String.format("Возникла ошибка: %s\n stack trace: %s", e.getMessage(), Arrays.stream(e.getStackTrace())
+                            .map(StackTraceElement::toString)
+                            .collect(Collectors.joining("\n"))))
                     .build();// todo Сделать свои экспешены и хэндлеры для него, отправлять сообщение в боте с описанием ошибки
         }
     }

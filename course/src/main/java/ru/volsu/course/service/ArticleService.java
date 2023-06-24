@@ -22,4 +22,6 @@ public interface ArticleService {
     Page<Article> findAll(PageRequest pageRequest);
 
     ArticleFilesDto findByTag(String tag, PageRequest pageRequest) throws Exception;
+
+    ArticleFilesDto findByTitle(String title, PageRequest pageRequest) throws Exception;
 }
