@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.volsu.coursebot.Bot;
 import ru.volsu.coursebot.dto.ArticleDto;
 import ru.volsu.coursebot.dto.FileDto;
 

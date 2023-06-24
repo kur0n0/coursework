@@ -8,11 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.volsu.coursebot.dto.ArticleDto;
 import ru.volsu.coursebot.dto.ArticlePage;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class CourseCoreServiceImpl implements CourseCoreService {

@@ -7,8 +7,6 @@ import ru.volsu.course.model.Article;
 import ru.volsu.course.model.ArticleDto;
 import ru.volsu.course.model.ArticleFilesDto;
 
-import java.util.List;
-
 public interface ArticleService {
 
     Article findById(Integer articleId);

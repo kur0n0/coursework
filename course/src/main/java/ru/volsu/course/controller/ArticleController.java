@@ -18,15 +18,15 @@ public class ArticleController {
 
     @GetMapping(value = "/tag/page")
     public ArticleFilesDto getPageByTag(@RequestParam Integer page,
-                                   @RequestParam Integer size,
-                                   @RequestParam String tag) throws Exception {
+                                        @RequestParam Integer size,
+                                        @RequestParam String tag) throws Exception {
         return articleService.findByTag(tag, PageRequest.of(page, size));
     }
 
     @GetMapping(value = "/title/page")
     public ArticleFilesDto getPageByTitle(@RequestParam Integer page,
-                                   @RequestParam Integer size,
-                                   @RequestParam String title) throws Exception {
+                                          @RequestParam Integer size,
+                                          @RequestParam String title) throws Exception {
         return articleService.findByTitle(title, PageRequest.of(page, size));
     }
 }

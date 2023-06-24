@@ -2,7 +2,6 @@ package ru.volsu.coursebot.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.util.List;
 
