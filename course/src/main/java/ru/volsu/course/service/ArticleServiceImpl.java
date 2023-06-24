@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.course.dao.ArticleRepository;
 import ru.volsu.course.model.Article;
 import ru.volsu.course.model.ArticleDto;
+import ru.volsu.course.model.ArticleFilesDto;
 import ru.volsu.course.model.FileDto;
 
 import javax.transaction.Transactional;
@@ -65,12 +66,31 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> findAll() {
-        return articleRepository.findAll();
+    public Page<Article> findAll(PageRequest pageRequest) {
+        return articleRepository.findAll(pageRequest);
     }
 
     @Override
-    public Page<Article> findAll(PageRequest pageRequest) {
-        return articleRepository.findAll(pageRequest);
+    public ArticleFilesDto findByTag(String tag, PageRequest pageRequest) throws Exception {
+        Page<Article> articlePage = articleRepository.findByTagContaining(tag, pageRequest);
+        List<ArticleDto> articleDtoList = new ArrayList<>();
+        for (Article article : articlePage.getContent()) {
+            List<FileDto> files = fileService.getFiles(article.getFilesUuidList(), article.getArticleId());
+            articleDtoList.add(new ArticleDto(article, files));
+        }
+
+        return new ArticleFilesDto(articleDtoList, articlePage.getNumber(), articlePage.getTotalPages());
+    }
+
+    @Override
+    public ArticleFilesDto findByTitle(String title, PageRequest pageRequest) throws Exception { // todo: подумать, как можно убрать дублирование кода, возможно добавить спецификацию для запроса в бд с пагинацией
+        Page<Article> articlePage = articleRepository.findByTitleContaining(title, pageRequest);
+        List<ArticleDto> articleDtoList = new ArrayList<>();
+        for (Article article : articlePage.getContent()) {
+            List<FileDto> files = fileService.getFiles(article.getFilesUuidList(), article.getArticleId());
+            articleDtoList.add(new ArticleDto(article, files));
+        }
+
+        return new ArticleFilesDto(articleDtoList, articlePage.getNumber(), articlePage.getTotalPages());
     }
 }

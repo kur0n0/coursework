@@ -1,13 +1,13 @@
-package ru.volsu.coursefilestorage;
+package ru.volsu.coursebot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CourseFileStorageApplication {
+public class CourseBotApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CourseFileStorageApplication.class, args);
+        SpringApplication.run(CourseBotApplication.class, args);
     }
 
 }

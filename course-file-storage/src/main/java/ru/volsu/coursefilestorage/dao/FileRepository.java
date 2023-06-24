@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface FileRepository extends MongoRepository<File, Integer> {
     Optional<File> findByUuid(String uuid);
+
     List<File> findAllByUuidIn(List<String> uuidList);
 }

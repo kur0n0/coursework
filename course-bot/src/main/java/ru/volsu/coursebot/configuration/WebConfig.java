@@ -1,4 +1,4 @@
-package ru.volsu.course.configuration;
+package ru.volsu.coursebot.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;

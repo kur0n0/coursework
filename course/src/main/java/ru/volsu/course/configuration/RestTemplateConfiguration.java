@@ -1,7 +1,6 @@
 package ru.volsu.course.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.client.RootUriTemplateHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +15,9 @@ public class RestTemplateConfiguration {
 
     @Bean(name = "fileTemplate")
     public RestTemplate restTemplate() {
-        RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
-
+        RestTemplate restTemplate = new RestTemplate();
         UriTemplateHandler uriTemplateHandler = new RootUriTemplateHandler(rootUrl);
-        return restTemplateBuilder.uriTemplateHandler(uriTemplateHandler)
-                .build();
+        restTemplate.setUriTemplateHandler(uriTemplateHandler);
+        return restTemplate;
     }
 }
