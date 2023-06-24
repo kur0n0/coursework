@@ -53,6 +53,7 @@ services:
       - "8090:8090"
     #      - "5005:5005"
     environment:
+      - URL=mongodb://admin:admin@mongodatabase:27017/?authSource=files
       - SPRING.DATA.MONGODB.URI=mongodb://admin:admin@mongodatabase:27017/?authSource=files
       - SPRING.DATA.MONGODB.DATABASE=files
     depends_on:

@@ -41,7 +41,7 @@ public class Bot extends SpringWebhookBot {
         BotSectionEnum botSectionEnum = switch (message.getText()) {
             case "Главное меню" -> BotSectionEnum.MAIN_MENU;
             case "Поиск по названию статьи" -> BotSectionEnum.SEARCH_BY_TITLE;
-            case "Поиск по тэгу" -> BotSectionEnum.SEARCH_BY_TAG;
+            case "Поиск по предмету статьи" -> BotSectionEnum.SEARCH_BY_TAG;
             default -> userCacheService.getBotSectionByUserId(userId);
         };
 

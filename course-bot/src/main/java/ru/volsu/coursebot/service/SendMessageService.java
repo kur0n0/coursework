@@ -104,7 +104,7 @@ public class SendMessageService {
 
     private static String buildText(ArticleDto articleDto) {
         return String.format("Название статьи: %s\n" +
-                "Название предмета: %s\n" +
-                "Текст: %s\n", articleDto.getTitle(), articleDto.getTag(), articleDto.getText());
+                "\nНазвание предмета: %s\n" +
+                "\nТекст: %s\n", articleDto.getTitle(), articleDto.getTag(), articleDto.getText());
     }
 }
