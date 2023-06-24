@@ -58,7 +58,7 @@ public class SearchByTag implements MessageHandler {
                 .chatId(chatId);
         switch (tagState) {
             case ASK_TAG -> {
-                sendMessageBuilder.text("Введите название тэга");
+                sendMessageBuilder.text("Введите название предмета");
                 userState.put(userId, UserCommandEnum.ENTER_TAG);
             }
             case ENTER_TAG -> {

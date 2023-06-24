@@ -22,6 +22,7 @@ services:
   postgres:
     container_name: postgres
     image: 'postgres:13.1-alpine'
+    restart: on-failure
     ports:
       - "5432:5432"
     environment:
@@ -33,6 +34,7 @@ services:
   mongodatabase:
     container_name: mongodatabase
     image: mongo:5.0
+    restart: on-failure
     ports:
       - "27017:27017"
     environment:
@@ -59,6 +61,7 @@ services:
   localtunnel:
     image: efrecon/localtunnel
     container_name: localtunnel
+    restart: on-failure
     command:
       --local-host host.docker.internal --port 8070 --subdomain course-volsu-bot1
   course-bot:
@@ -66,7 +69,6 @@ services:
     build:
       context: ./course-bot
       dockerfile: Dockerfile
-    restart: always
     environment:
       - WEBHOOK.PATH=https://course-volsu-bot1.local.lt
       - CORE_API_URL=http://host.docker.internal:8080
