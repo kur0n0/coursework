@@ -40,8 +40,8 @@ public class AdminController {
                                 @RequestParam MultipartFile[] files) throws Exception {
         articleService.save(article, files);
 
-        article = new Article(); // очищаем модель для нового добавления
-        return ARTICLE_FORM_URL;
+        article = null; // очищаем модель для нового добавления
+        return "redirect:/admin/article/page/";
     }
 
     @GetMapping(value = "/article/page")
