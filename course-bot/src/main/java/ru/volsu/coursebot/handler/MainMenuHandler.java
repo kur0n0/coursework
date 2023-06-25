@@ -18,16 +18,12 @@ public class MainMenuHandler implements MessageHandler {
 
     @Override
     public SendMessage handle(Update update) {
-        Message message = update.getMessage();
-        SendMessage sendMessage = SendMessage
+        return SendMessage
                 .builder()
-                .chatId(message.getChatId().toString())
+                .chatId(update.getMessage().getChatId().toString())
                 .replyMarkup(mainMenuKeyboard)
                 .text("Выберите действие")
                 .build();
-
-
-        return sendMessage;
     }
 
     @Override

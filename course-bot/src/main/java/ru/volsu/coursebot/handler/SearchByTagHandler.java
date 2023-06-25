@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class SearchByTag implements MessageHandler {
+public class SearchByTagHandler implements MessageHandler {
 
     @Autowired
     @Qualifier(value = "mainMenuKeyboard")
