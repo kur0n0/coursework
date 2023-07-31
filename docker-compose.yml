@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-#      - "5005:5005"
+      - "5005:5005"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/course
       - SPRING_DATASOURCE_USERNAME=postgres
@@ -51,7 +51,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8090:8090"
-    #      - "5005:5005"
+      - "5006:5005"
     environment:
       - URL=mongodb://admin:admin@mongodatabase:27017/?authSource=files
       - SPRING.DATA.MONGODB.URI=mongodb://admin:admin@mongodatabase:27017/?authSource=files
@@ -75,6 +75,6 @@ services:
       - CORE_API_URL=http://host.docker.internal:8080
     ports:
       - "8070:8070"
-      - "5005:5005"
+      - "5007:5005"
     depends_on:
       - localtunnel
