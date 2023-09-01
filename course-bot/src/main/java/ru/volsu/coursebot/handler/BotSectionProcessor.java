@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.volsu.coursebot.enums.BotSectionEnum;
+import ru.volsu.coursebot.exceptions.BotException;
+import ru.volsu.coursebot.exceptions.CoreException;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class BotSectionProcessor {
                 .collect(Collectors.toMap(MessageHandler::getBotState, Function.identity()));
     }
 
-    public BotApiMethod<?> handle(BotSectionEnum botSectionEnum, Update update) throws Exception {
+    public BotApiMethod<?> handle(BotSectionEnum botSectionEnum, Update update) throws BotException, CoreException {
         return messageHandlers.get(botSectionEnum).handle(update);
     }
 }

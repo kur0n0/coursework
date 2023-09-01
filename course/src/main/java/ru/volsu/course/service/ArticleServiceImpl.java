@@ -73,18 +73,16 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ArticleFilesDto findByTag(String tag, PageRequest pageRequest) throws Exception {
         Page<Article> articlePage = articleRepository.findByTagContaining(tag, pageRequest);
-        List<ArticleDto> articleDtoList = new ArrayList<>();
-        for (Article article : articlePage.getContent()) {
-            List<FileDto> files = fileService.getFiles(article.getFilesUuidList(), article.getArticleId());
-            articleDtoList.add(new ArticleDto(article, files));
-        }
-
-        return new ArticleFilesDto(articleDtoList, articlePage.getNumber(), articlePage.getTotalPages());
+        return getArticleFilesDto(articlePage);
     }
 
     @Override
     public ArticleFilesDto findByTitle(String title, PageRequest pageRequest) throws Exception { // todo: подумать, как можно убрать дублирование кода, возможно добавить спецификацию для запроса в бд с пагинацией
         Page<Article> articlePage = articleRepository.findByTitleContaining(title, pageRequest);
+        return getArticleFilesDto(articlePage);
+    }
+
+    private ArticleFilesDto getArticleFilesDto(Page<Article> articlePage) throws Exception {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for (Article article : articlePage.getContent()) {
             List<FileDto> files = fileService.getFiles(article.getFilesUuidList(), article.getArticleId());

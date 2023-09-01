@@ -1,5 +1,7 @@
 package ru.volsu.coursebot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -8,6 +10,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.starter.SpringWebhookBot;
 import ru.volsu.coursebot.enums.BotSectionEnum;
+import ru.volsu.coursebot.exceptions.BotException;
+import ru.volsu.coursebot.exceptions.CoreException;
 import ru.volsu.coursebot.handler.BotSectionProcessor;
 import ru.volsu.coursebot.service.UserCacheService;
 
@@ -21,6 +25,8 @@ public class Bot extends SpringWebhookBot {
 
     @Autowired
     private BotSectionProcessor botSectionProcessor;
+
+    Logger log = LoggerFactory.getLogger(getClass());
 
     private String botUsername;
     private String botToken;
@@ -48,13 +54,14 @@ public class Bot extends SpringWebhookBot {
         userCacheService.setBotSectionForUser(userId, botSectionEnum);
         try {
             return botSectionProcessor.handle(botSectionEnum, update);
-        } catch (Exception e) {
+        } catch (BotException | CoreException e) {
+            log.error("При обработке сообщения: {}, ошибка: {}", botSectionEnum, e.getMessage());
             return SendMessage.builder()
                     .chatId(userId.toString())
                     .text(String.format("Возникла ошибка: %s\n stack trace: %s", e.getMessage(), Arrays.stream(e.getStackTrace())
                             .map(StackTraceElement::toString)
                             .collect(Collectors.joining("\n"))))
-                    .build();// todo Сделать свои экспешены и хэндлеры для него, отправлять сообщение в боте с описанием ошибки
+                    .build();
         }
     }
 

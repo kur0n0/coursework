@@ -13,8 +13,10 @@ import ru.volsu.coursebot.dto.ArticlePage;
 import ru.volsu.coursebot.dto.PageInfo;
 import ru.volsu.coursebot.enums.BotSectionEnum;
 import ru.volsu.coursebot.enums.UserCommandEnum;
+import ru.volsu.coursebot.exceptions.BotException;
+import ru.volsu.coursebot.exceptions.CoreException;
 import ru.volsu.coursebot.service.CourseCoreService;
-import ru.volsu.coursebot.service.SendMessageService;
+import ru.volsu.coursebot.service.MessageService;
 import ru.volsu.coursebot.service.UserCacheService;
 
 import java.util.HashMap;
@@ -36,7 +38,7 @@ public class SearchByTitleHandler implements MessageHandler {
     private ReplyKeyboardMarkup continueKeyboard;
 
     @Autowired
-    private SendMessageService sendMessageService;
+    private MessageService messageService;
 
     @Autowired
     private UserCacheService userCacheService;
@@ -46,7 +48,7 @@ public class SearchByTitleHandler implements MessageHandler {
     private Map<Long, PageInfo> userPage = new HashMap<>();
 
     @Override
-    public SendMessage handle(Update update) throws Exception {
+    public SendMessage handle(Update update) throws BotException, CoreException {
         Message message = update.getMessage();
         String text = message.getText();
         Long userId = update.getMessage().getFrom().getId();
@@ -77,7 +79,7 @@ public class SearchByTitleHandler implements MessageHandler {
                 PageInfo responsePageInfo = new PageInfo(articlePage.getTotalPages(), articlePage.getCurrentPage());
                 userPage.put(userId, responsePageInfo);
 
-                sendMessageService.sendArticleMessage(chatId, articlePage.getContent());
+                messageService.sendArticleMessage(chatId, articlePage.getContent());
                 sendMessageBuilder.text("Выберите действие");
                 sendMessageBuilder.replyMarkup(getPageKeyboard(responsePageInfo.getCurrentPage(), responsePageInfo.getTotalPages()));
                 sendMessageBuilder.parseMode("Markdown");
