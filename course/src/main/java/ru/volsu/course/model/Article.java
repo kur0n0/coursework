@@ -1,10 +1,15 @@
 package ru.volsu.course.model;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.TermVector;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@Indexed
 @Table(name = "articles")
 public class Article implements Serializable {
 
@@ -13,10 +18,13 @@ public class Article implements Serializable {
     @Column(name = "article_id")
     private Integer articleId;
 
+    @Field
     private String text;
 
+    @Field
     private String title;
 
+    @Field
     private String tag;
 
     @ElementCollection

@@ -29,4 +29,11 @@ public class ArticleController {
                                           @RequestParam String title) throws Exception {
         return articleService.findByTitle(title, PageRequest.of(page, size));
     }
+
+    @GetMapping(value = "/title/query")
+    public ArticleFilesDto fullTextSearch(@RequestParam Integer page,
+                                          @RequestParam Integer size,
+                                          @RequestParam String queryString) throws Exception {
+        return articleService.fullTextSearch(queryString, PageRequest.of(page, size));
+    }
 }

@@ -22,4 +22,6 @@ public interface ArticleService {
     ArticleFilesDto findByTag(String tag, PageRequest pageRequest) throws Exception;
 
     ArticleFilesDto findByTitle(String title, PageRequest pageRequest) throws Exception;
+
+    ArticleFilesDto fullTextSearch(String query, PageRequest pageRequest) throws Exception;
 }

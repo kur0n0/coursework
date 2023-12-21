@@ -1,5 +1,10 @@
 package ru.volsu.course.service;
 
+import org.apache.lucene.search.Query;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,7 @@ import ru.volsu.course.model.ArticleDto;
 import ru.volsu.course.model.ArticleFilesDto;
 import ru.volsu.course.model.FileDto;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +34,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public Article findById(Integer articleId) {
@@ -82,6 +91,32 @@ public class ArticleServiceImpl implements ArticleService {
         return getArticleFilesDto(articlePage);
     }
 
+    @Override
+    public ArticleFilesDto fullTextSearch(String queryString, PageRequest pageRequest) throws Exception {
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+
+        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+                .forEntity(Article.class)
+                .get();
+
+        Query query = queryBuilder.keyword()
+                .onFields("text", "title", "tag")
+                .matching(queryString)
+                .createQuery();
+
+        Integer page = pageRequest.getPageNumber() > 0 ? pageRequest.getPageNumber() : 1;
+        Integer size = pageRequest.getPageSize() > 0 ? pageRequest.getPageSize() : 10;
+
+        FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(query, Article.class);
+        fullTextQuery.setFirstResult(page);
+        fullTextQuery.setMaxResults(size);
+        List<Article> resultList = fullTextQuery.getResultList();
+
+        Integer totalPages = fullTextQuery.getResultSize();
+
+        return getArticleFilesDto(resultList, page, totalPages);
+    }
+
     private ArticleFilesDto getArticleFilesDto(Page<Article> articlePage) throws Exception {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for (Article article : articlePage.getContent()) {
@@ -90,5 +125,15 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         return new ArticleFilesDto(articleDtoList, articlePage.getNumber(), articlePage.getTotalPages());
+    }
+
+    private ArticleFilesDto getArticleFilesDto(List<Article> articles, Integer currentPage, Integer totalPages) throws Exception {
+        List<ArticleDto> articleDtoList = new ArrayList<>();
+        for (Article article : articles) {
+            List<FileDto> files = fileService.getFiles(article.getFilesUuidList(), article.getArticleId());
+            articleDtoList.add(new ArticleDto(article, files));
+        }
+
+        return new ArticleFilesDto(articleDtoList, currentPage, totalPages);
     }
 }
