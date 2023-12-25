@@ -8,5 +8,8 @@ public enum UserCommandEnum {
     ENTER_TAG,
 
     SHOW_PAGE,
-    CHOOSE_PAGE;
+    CHOOSE_PAGE,
+
+    ASK_STRING_QUERY,
+    ENTER_STRING_QUERY;
 }

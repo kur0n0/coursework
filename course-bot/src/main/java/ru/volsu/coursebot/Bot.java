@@ -48,6 +48,7 @@ public class Bot extends SpringWebhookBot {
             case "Главное меню" -> BotSectionEnum.MAIN_MENU;
             case "Поиск по названию статьи" -> BotSectionEnum.SEARCH_BY_TITLE;
             case "Поиск по предмету статьи" -> BotSectionEnum.SEARCH_BY_TAG;
+            case "Полный поиск по строке" -> BotSectionEnum.SEARCH_FULL_TEXT;
             default -> userCacheService.getBotSectionByUserId(userId);
         };
 

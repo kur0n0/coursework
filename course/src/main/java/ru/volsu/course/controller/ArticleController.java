@@ -30,10 +30,10 @@ public class ArticleController {
         return articleService.findByTitle(title, PageRequest.of(page, size));
     }
 
-    @GetMapping(value = "/title/query")
-    public ArticleFilesDto fullTextSearch(@RequestParam Integer page,
-                                          @RequestParam(required = false) Integer size,
-                                          @RequestParam(required = false) String queryString) throws Exception {
-        return articleService.fullTextSearch(queryString, PageRequest.of(page, size));
+    @GetMapping(value = "/page")
+    public ArticleFilesDto fullTextSearch(@RequestParam String query,
+                                          @RequestParam Integer page,
+                                          @RequestParam Integer size) throws Exception {
+        return articleService.fullTextSearch(query, PageRequest.of(page, size));
     }
 }

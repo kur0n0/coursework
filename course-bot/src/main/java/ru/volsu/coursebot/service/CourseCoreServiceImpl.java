@@ -26,7 +26,11 @@ public class CourseCoreServiceImpl implements CourseCoreService {
     public ArticlePage getPageByTag(Integer page, String tag) throws CoreException {
         ResponseEntity<ArticlePage> responseEntity;
         try {
-            responseEntity = coreTemplate.getForEntity("/api/article/tag/page?page={page}&size={pageSize}&tag={tag}", ArticlePage.class, page, pageSize, tag);
+            responseEntity = coreTemplate.getForEntity("/api/article/tag/page?page={page}&size={pageSize}&tag={tag}",
+                    ArticlePage.class,
+                    page,
+                    pageSize,
+                    tag);
         } catch (RestClientException e) {
             log.error("Сетевая ошибка при получении старницы статей: {}", e.getMessage());
             throw new CoreException("Сетевая ошибка при получении старницы статей: " + e.getMessage());
@@ -39,7 +43,28 @@ public class CourseCoreServiceImpl implements CourseCoreService {
     public ArticlePage getPageByTitle(Integer page, String title) throws CoreException {
         ResponseEntity<ArticlePage> responseEntity;
         try {
-            responseEntity = coreTemplate.getForEntity("/api/article/title/page?page={page}&size={pageSize}&title={title}", ArticlePage.class, page, pageSize, title);
+            responseEntity = coreTemplate.getForEntity("/api/article/title/page?page={page}&size={pageSize}&title={title}",
+                    ArticlePage.class,
+                    page,
+                    pageSize,
+                    title);
+        } catch (RestClientException e) {
+            log.error("Сетевая ошибка при получении старницы статей: {}", e.getMessage());
+            throw new CoreException("Сетевая ошибка при получении старницы статей: " + e.getMessage());
+        }
+
+        return responseEntity.getBody();
+    }
+
+    @Override
+    public ArticlePage getPageFullTextSearch(Integer page, String query) throws CoreException {
+        ResponseEntity<ArticlePage> responseEntity;
+        try {
+            responseEntity = coreTemplate.getForEntity("/api/article/page?query={query}&page={page}&size={pageSize}",
+                    ArticlePage.class,
+                    query,
+                    page,
+                    pageSize);
         } catch (RestClientException e) {
             log.error("Сетевая ошибка при получении старницы статей: {}", e.getMessage());
             throw new CoreException("Сетевая ошибка при получении старницы статей: " + e.getMessage());

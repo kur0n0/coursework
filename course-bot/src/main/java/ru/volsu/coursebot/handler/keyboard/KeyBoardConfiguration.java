@@ -17,7 +17,9 @@ public class KeyBoardConfiguration {
         row1.add(new KeyboardButton("Поиск по названию статьи"));
         KeyboardRow row2 = new KeyboardRow();
         row2.add(new KeyboardButton("Поиск по предмету статьи"));
-        List<KeyboardRow> keyboard = List.of(row1, row2);
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add(new KeyboardButton("Полный поиск по строке"));
+        List<KeyboardRow> keyboard = List.of(row1, row2, row3);
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(keyboard);
