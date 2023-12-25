@@ -88,7 +88,7 @@ public class FullTextSearchHandler implements MessageHandler {
                 return sendMessageBuilder
                         .build();
             }
-            case CHOOSE_PAGE -> {
+            case CHOOSE_PAGE -> { // todo пофиксить пагинацию
                 PageInfo cachedPageInfo = userPage.get(userId);
                 if (text.equals("Предыдущая страница")) {
                     cachedPageInfo.setCurrentPage(cachedPageInfo.getCurrentPage() - 1);
