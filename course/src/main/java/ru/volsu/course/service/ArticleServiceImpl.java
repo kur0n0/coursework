@@ -1,6 +1,8 @@
 package ru.volsu.course.service;
 
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
@@ -95,7 +97,9 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleFilesDto fullTextSearch(String queryString, PageRequest pageRequest) throws Exception {
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 
-        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+        QueryBuilder queryBuilder = fullTextEntityManager
+                .getSearchFactory()
+                .buildQueryBuilder()
                 .forEntity(Article.class)
                 .get();
 
@@ -107,12 +111,17 @@ public class ArticleServiceImpl implements ArticleService {
         Integer page = pageRequest.getPageNumber() > 0 ? pageRequest.getPageNumber() : 1;
         Integer size = pageRequest.getPageSize() > 0 ? pageRequest.getPageSize() : 10;
 
-        FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(query, Article.class);
-        fullTextQuery.setFirstResult(page);
-        fullTextQuery.setMaxResults(size);
-        List<Article> resultList = fullTextQuery.getResultList();
+        Sort sorting = new Sort(SortField.FIELD_SCORE);
 
-        Integer totalPages = fullTextQuery.getResultSize();
+        FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(query, Article.class);
+        fullTextQuery.setFirstResult((page - 1) * size);
+        fullTextQuery.setMaxResults(size);
+        fullTextQuery.setSort(sorting);
+
+        List<Article> resultList = fullTextQuery.getResultList();
+        Integer totalResult = fullTextQuery.getResultSize();
+
+        Integer totalPages = totalResult / size + (totalResult % size == 0 ? 0 : 1);
 
         return getArticleFilesDto(resultList, page, totalPages);
     }
