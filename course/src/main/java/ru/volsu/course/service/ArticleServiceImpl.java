@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.course.dao.ArticleRepository;
 import ru.volsu.course.model.Article;
-import ru.volsu.course.model.ArticleDto;
-import ru.volsu.course.model.ArticleFilesDto;
-import ru.volsu.course.model.FileDto;
+import ru.volsu.course.dto.ArticleDto;
+import ru.volsu.course.dto.ArticleFilesDto;
+import ru.volsu.course.dto.FileDto;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;

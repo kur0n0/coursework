@@ -16,7 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import ru.volsu.course.model.FileDto;
+import ru.volsu.course.dto.FileDto;
 import ru.volsu.course.model.FileRequest;
 
 import java.util.Arrays;

@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.course.model.Article;
-import ru.volsu.course.model.ArticleDto;
+import ru.volsu.course.dto.ArticleDto;
 import ru.volsu.course.service.ArticleService;
 
 import java.util.List;

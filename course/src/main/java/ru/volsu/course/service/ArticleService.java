@@ -4,8 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.course.model.Article;
-import ru.volsu.course.model.ArticleDto;
-import ru.volsu.course.model.ArticleFilesDto;
+import ru.volsu.course.dto.ArticleDto;
+import ru.volsu.course.dto.ArticleFilesDto;
 
 public interface ArticleService {
 
