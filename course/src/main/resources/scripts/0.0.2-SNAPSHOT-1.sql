@@ -20,3 +20,4 @@ create table solvedtask(
                     username varchar(255),
                     task_id int8 references task(task_id)
 );
+create index if not exists solvedtask_username_idx on solvedtask using btree (username);
