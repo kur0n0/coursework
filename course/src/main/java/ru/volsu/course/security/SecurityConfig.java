@@ -28,8 +28,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/admin/article/page")
+                .defaultSuccessUrl("/admin/article/page", true)
                 .loginPage("/login")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
                 .and()
                 .httpBasic();
         http.csrf().disable();
