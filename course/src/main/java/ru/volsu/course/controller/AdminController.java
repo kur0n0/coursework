@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 @RequestMapping(value = "/admin")
 public class AdminController {
 
-    private static final String ARTICLE_FORM_URL = "article-form";
+    private static final String ARTICLE_FORM_PAGE = "article-form";
 
     @Autowired
     private ArticleService articleService;
@@ -32,7 +32,7 @@ public class AdminController {
 
     @GetMapping(value = "/article-form")
     public String articleForm() {
-        return "article-form";
+        return ARTICLE_FORM_PAGE;
     }
 
     @PostMapping(value = "/article")
@@ -72,8 +72,9 @@ public class AdminController {
         return "article-one.html";
     }
 
-    @DeleteMapping(value = "/article")
-    public void deleteArticle(@RequestParam Integer articleId) {
+    @PostMapping(value = "/article/delete")
+    public String deleteArticle(@RequestParam Integer articleId) {
         articleService.delete(articleId);
+        return "redirect:/admin/article/page/";
     }
 }

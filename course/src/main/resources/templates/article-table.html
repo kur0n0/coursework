@@ -16,6 +16,7 @@
             <th scope="col">Идентификатор</th>
             <th scope="col">Название</th>
             <th scope="col">Предмет</th>
+            <th scope="col">Удаление статьи</th>
         </tr>
         </thead>
         <tbody>
@@ -23,6 +24,12 @@
             <td><a th:href="@{/admin/article/one(articleId=${article.articleId})}"><span th:text="${article.articleId}"/></a></td>
             <td><span th:text="${article.title}"></span></td>
             <td><span th:text="${article.tag}"></span></td>
+            <td>
+                <form th:action="@{/admin/article/delete}" method="POST" th:object="${article}">
+                    <input name="articleId" type="hidden" th:value="${article.articleId}">
+                    <button type="submit" class="btn btn-primary">Удалить</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
