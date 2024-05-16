@@ -18,4 +18,8 @@
     <changeSet id="0.0.1-SNAPSHOT-4" author="vladislav.kim">
         <sqlFile relativeToChangelogFile="false" path="/scripts/0.0.1-SNAPSHOT-4.sql"/>
     </changeSet>
+
+    <changeSet id="0.0.2-SNAPSHOT-1" author="vladislav.kim">
+        <sqlFile relativeToChangelogFile="false" path="/scripts/0.0.2-SNAPSHOT-1.sql"/>
+    </changeSet>
 </databaseChangeLog>
