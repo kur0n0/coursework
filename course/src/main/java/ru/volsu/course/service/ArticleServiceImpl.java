@@ -25,6 +25,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -124,6 +125,11 @@ public class ArticleServiceImpl implements ArticleService {
         Integer totalPages = totalResult / size + (totalResult % size == 0 ? 0 : 1);
 
         return getArticleFilesDto(resultList, page, totalPages);
+    }
+
+    @Override
+    public Optional<Article> findByTitle(String articleTitleHint) {
+        return articleRepository.findByTitle(articleTitleHint);
     }
 
     private ArticleFilesDto getArticleFilesDto(Page<Article> articlePage) throws Exception {

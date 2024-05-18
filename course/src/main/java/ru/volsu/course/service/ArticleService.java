@@ -7,6 +7,8 @@ import ru.volsu.course.model.Article;
 import ru.volsu.course.dto.ArticleDto;
 import ru.volsu.course.dto.ArticleFilesDto;
 
+import java.util.Optional;
+
 public interface ArticleService {
 
     Article findById(Integer articleId);
@@ -24,4 +26,6 @@ public interface ArticleService {
     ArticleFilesDto findByTitle(String title, PageRequest pageRequest) throws Exception;
 
     ArticleFilesDto fullTextSearch(String query, PageRequest pageRequest) throws Exception;
+
+    Optional<Article> findByTitle(String articleTitleHint);
 }
