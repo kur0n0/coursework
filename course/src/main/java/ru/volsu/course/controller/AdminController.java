@@ -7,9 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.volsu.course.dto.TaskDTO;
+import ru.volsu.course.enums.AnswerMappingEnum;
 import ru.volsu.course.model.Article;
-import ru.volsu.course.model.ArticleDto;
+import ru.volsu.course.dto.ArticleDto;
+import ru.volsu.course.model.Task;
 import ru.volsu.course.service.ArticleService;
+import ru.volsu.course.service.TaskService;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,19 +24,20 @@ import java.util.stream.IntStream;
 @RequestMapping(value = "/admin")
 public class AdminController {
 
-    private static final String ARTICLE_FORM_URL = "article-form";
-
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private TaskService taskService;
 
     @ModelAttribute(value = "article")
     public Article newArticle() {
         return new Article();
     }
 
-    @GetMapping(value = "/article-form")
+    @GetMapping(value = "/article/form")
     public String articleForm() {
-        return "article-form";
+        return "article-form.html";
     }
 
     @PostMapping(value = "/article")
@@ -45,9 +50,9 @@ public class AdminController {
     }
 
     @GetMapping(value = "/article/page")
-    public String getPage(Model model,
-                          @RequestParam Optional<Integer> page,
-                          @RequestParam Optional<Integer> size) {
+    public String getAritclePage(Model model,
+                                 @RequestParam Optional<Integer> page,
+                                 @RequestParam Optional<Integer> size) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
 
@@ -72,8 +77,58 @@ public class AdminController {
         return "article-one.html";
     }
 
-    @DeleteMapping(value = "/article")
-    public void deleteArticle(@RequestParam Integer articleId) {
+    @PostMapping(value = "/article/delete")
+    public String deleteArticle(@RequestParam Integer articleId) {
         articleService.delete(articleId);
+        return "redirect:/admin/article/page/";
+    }
+
+    @GetMapping(value = "/task/page")
+    public String getTaskPage(Model model,
+                              @RequestParam Optional<Integer> page,
+                              @RequestParam Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(10);
+
+        Page<Task> taskPage = taskService.findAll(PageRequest.of(currentPage - 1, pageSize));
+        model.addAttribute("taskPage", taskPage);
+        int totalPages = taskPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "task-table.html";
+    }
+
+    @GetMapping(value = "/task/form")
+    public String taskForm() {
+        return "task-form.html";
+    }
+
+    @PostMapping(value = "/task")
+    public String createTask(@RequestParam String question,
+                             @RequestParam String answer,
+                             @RequestParam AnswerMappingEnum answerMapping,
+                             @RequestParam(required = false) String articleTitleHint) {
+        Optional<Article> article = articleService.findByTitle(articleTitleHint);
+
+        Task task = new Task();
+        task.setQuestion(question);
+        task.setAnswer(answer);
+        task.setAnswerMapping(answerMapping);
+        article.ifPresent(a -> task.setHintArticleId(a.getArticleId()));
+
+        taskService.save(task);
+
+        return "redirect:/admin/task/page/";
+    }
+
+    @PostMapping(value = "/task/delete")
+    public String deleteTask(@RequestParam Long taskId) {
+        taskService.delete(taskId);
+        return "redirect:/admin/task/page/";
     }
 }

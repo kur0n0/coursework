@@ -1,7 +1,7 @@
 package ru.volsu.course.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.volsu.course.model.FileDto;
+import ru.volsu.course.dto.FileDto;
 
 import java.util.List;
 

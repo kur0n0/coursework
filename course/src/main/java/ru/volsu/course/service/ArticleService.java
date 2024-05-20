@@ -4,8 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.course.model.Article;
-import ru.volsu.course.model.ArticleDto;
-import ru.volsu.course.model.ArticleFilesDto;
+import ru.volsu.course.dto.ArticleDto;
+import ru.volsu.course.dto.ArticleFilesDto;
+
+import java.util.Optional;
 
 public interface ArticleService {
 
@@ -24,4 +26,6 @@ public interface ArticleService {
     ArticleFilesDto findByTitle(String title, PageRequest pageRequest) throws Exception;
 
     ArticleFilesDto fullTextSearch(String query, PageRequest pageRequest) throws Exception;
+
+    Optional<Article> findByTitle(String articleTitleHint);
 }

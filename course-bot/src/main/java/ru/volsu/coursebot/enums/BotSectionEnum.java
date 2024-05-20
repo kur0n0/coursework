@@ -4,5 +4,6 @@ public enum BotSectionEnum {
     MAIN_MENU,
     SEARCH_BY_TITLE,
     SEARCH_BY_TAG,
-    SEARCH_FULL_TEXT;
+    SEARCH_FULL_TEXT,
+    SOLVE_TASK;
 }

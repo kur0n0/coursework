@@ -1,4 +1,4 @@
-package ru.volsu.course.model;
+package ru.volsu.course.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
