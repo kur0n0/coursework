@@ -39,3 +39,5 @@ course/mvnw*
 mongodb-data
 course-file-storage/.mvn
 course-file-storage/mvnw*
+
+!.idea/runConfigurations/docker_compose_yml__Compose_Deployment.xml
