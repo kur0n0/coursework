@@ -10,12 +10,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import ru.volsu.coursebot.exceptions.BotException;
 import ru.volsu.coursebot.dto.ArticleDto;
 import ru.volsu.coursebot.dto.ArticlePage;
 import ru.volsu.coursebot.dto.PageInfo;
 import ru.volsu.coursebot.enums.BotSectionEnum;
 import ru.volsu.coursebot.enums.UserCommandEnum;
+import ru.volsu.coursebot.exceptions.BotException;
 import ru.volsu.coursebot.exceptions.CoreException;
 import ru.volsu.coursebot.service.CourseCoreService;
 import ru.volsu.coursebot.service.MessageService;
@@ -82,7 +82,7 @@ public class SearchByTagHandler implements MessageHandler {
                 userPage.put(userId, responsePageInfo);
 
                 List<ArticleDto> content = articlePage.getContent();
-                if(!content.isEmpty()) {
+                if (!content.isEmpty()) {
                     messageService.sendArticleMessage(chatId, content);
                 } else {
                     messageService.sendDefaultMessage(chatId, "По данному запросу ничего не найдено");
@@ -146,7 +146,9 @@ public class SearchByTagHandler implements MessageHandler {
         mainRow.add(new KeyboardButton("В главное меню"));
 
         List<KeyboardRow> keyboard;
-        if ((currentPage == totalPages - 1) && totalPages > 1) {
+        if (currentPage > 0 && currentPage < totalPages - 1) {
+            keyboard = List.of(previousRow, mainRow, nextRow);
+        } else if ((currentPage == totalPages - 1) && totalPages > 1) {
             keyboard = List.of(previousRow, mainRow);
         } else if (currentPage <= 0 && totalPages > 1) {
             keyboard = List.of(nextRow, mainRow);

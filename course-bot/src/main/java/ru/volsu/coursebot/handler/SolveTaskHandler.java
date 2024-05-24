@@ -85,10 +85,14 @@ public class SolveTaskHandler implements MessageHandler {
                     userState.put(userId, UserCommandEnum.HANDLE_ANSWER);
                     sendMessageBuilder.text("Введите ответ");
                 } else if (text.equalsIgnoreCase(GET_HINT)) {
+                    String textToSend = "Подсказка для данного задания отсутствует";
                     ArticleDto articleDto = hintCache.get(userId);
-                    messageService.sendArticleMessage(chatId, List.of(articleDto));
+                    if (articleDto != null) {
+                        messageService.sendArticleMessage(chatId, List.of(articleDto));
+                        textToSend = "";
+                    }
                     userState.put(userId, UserCommandEnum.WAIT_ACTION);
-                    sendMessageBuilder.text("");
+                    sendMessageBuilder.text(textToSend);
                 } else {
                     userState.remove(userId);
                     hintCache.remove(userId);
@@ -110,20 +114,26 @@ public class SolveTaskHandler implements MessageHandler {
                     answer = Long.parseLong(userAnswer);
                 }
 
+                String text = "Ответ неправильный, попробуйте еще раз!"; // todo неправильно работает кейс с неправильным ответом
                 courseCoreService.createTaskHistory(taskDTO.getTaskId(), from.getUserName(), answer.toString());
                 if ((taskDTO.getAnswerMapping().equals(AnswerMappingEnum.LONG) && answer.equals(Long.parseLong(correctAnswer))) ||
                         (taskDTO.getAnswerMapping().equals(AnswerMappingEnum.STRING) && answer.equals(correctAnswer))) {
                     courseCoreService.createSolvedTask(from.getUserName(), taskDTO.getTaskId());
+                    text = "Ответ верный!";
+                    userState.remove(userId);
+                    hintCache.remove(userId);
+                    taskCache.remove(userId);
+                    userCacheService.setBotSectionForUser(userId, BotSectionEnum.MAIN_MENU);
+                    sendMessageBuilder
+                            .replyMarkup(mainMenuKeyboard)
+                            .parseMode("Markdown")
+                            .text(text);
                 }
 
-                userState.remove(userId);
-                hintCache.remove(userId);
-                taskCache.remove(userId);
-                userCacheService.setBotSectionForUser(userId, BotSectionEnum.MAIN_MENU);
+                userState.put(userId, UserCommandEnum.WAIT_ACTION);
                 sendMessageBuilder
-                        .replyMarkup(mainMenuKeyboard)
-                        .parseMode("Markdown")
-                        .text("Ответ верный!");
+                        .text(text);
+
             }
         }
 

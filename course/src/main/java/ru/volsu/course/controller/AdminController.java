@@ -126,7 +126,7 @@ public class AdminController {
         return "redirect:/admin/task/page/";
     }
 
-    @PostMapping(value = "/task/delete")
+    @PostMapping(value = "/task/delete") // todo: исправить на софт удаление
     public String deleteTask(@RequestParam Long taskId) {
         taskService.delete(taskId);
         return "redirect:/admin/task/page/";

@@ -23,7 +23,7 @@ public class CourseCoreServiceImpl implements CourseCoreService {
 
     Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Integer pageSize = 3;
+    private final Integer pageSize = 1;
 
     @Override
     public ArticlePage getPageByTag(Integer page, String tag) throws CoreException {

@@ -140,7 +140,9 @@ public class FullTextSearchHandler implements MessageHandler {
         mainRow.add(new KeyboardButton("В главное меню"));
 
         List<KeyboardRow> keyboard;
-        if ((currentPage == totalPages - 1) && totalPages > 1) {
+        if (currentPage > 0 && currentPage < totalPages - 1) {
+            keyboard = List.of(previousRow, mainRow, nextRow);
+        } else if ((currentPage == totalPages - 1) && totalPages > 1) {
             keyboard = List.of(previousRow, mainRow);
         } else if (currentPage <= 0 && totalPages > 1) {
             keyboard = List.of(nextRow, mainRow);
