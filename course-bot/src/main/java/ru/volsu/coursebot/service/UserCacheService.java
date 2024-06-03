@@ -1,25 +1,37 @@
 package ru.volsu.coursebot.service;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.volsu.coursebot.enums.BotSectionEnum;
-
-import java.util.HashMap;
-import java.util.Map;
+import ru.volsu.coursebot.enums.UserCommandEnum;
 
 @Service
 public class UserCacheService {
 
-    private Map<Long, BotSectionEnum> userState = new HashMap<>();
-
+    @Cacheable(value = "BotSection", key = "#userId")
     public BotSectionEnum getBotSectionByUserId(Long userId) {
-        return userState.getOrDefault(userId, BotSectionEnum.MAIN_MENU);
+        return null;
     }
 
-    public void setBotSectionForUser(Long userId, BotSectionEnum botSection) {
-        if (userState.containsKey(userId)) {
-            userState.replace(userId, botSection);
-        } else {
-            userState.put(userId, botSection);
-        }
+    @CachePut(value = "BotSection", key = "#userId")
+    public BotSectionEnum setBotSectionForUser(Long userId, BotSectionEnum botSection) {
+        return botSection;
+    }
+
+    @Cacheable(value = "UserCommand", key = "#userId")
+    public UserCommandEnum getCommand(Long userId) {
+        return null;
+    }
+
+    @CachePut(value = "UserCommand", key = "#userId")
+    public UserCommandEnum putCommand(Long userId, UserCommandEnum userCommandEnum) {
+        return userCommandEnum;
+    }
+
+    @CacheEvict(value = "UserCommand", key = "#userId")
+    public void clearCommand(Long userId) {
+
     }
 }

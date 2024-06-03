@@ -1,8 +1,9 @@
 version: "3.8"
+name: course
 
 services:
   course:
-    container_name: course-core
+    container_name: core
     build:
       context: ./course
       dockerfile: Dockerfile
@@ -15,7 +16,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=admin
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       - SPRING_JPA_HIBERNATE_DDL-AUTO=none
-      - FILES.API.URL=http://host.docker.internal:8090
+      - FILES.API.URL=http://file-storage:8090
     depends_on:
       postgres:
         condition: service_started
@@ -31,21 +32,9 @@ services:
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
       - ./init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
-  mongodatabase:
-    container_name: mongodatabase
-    image: mongo:5.0
-    restart: on-failure
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE: files
-    volumes:
-      - ./mongodb-data:/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-  course-file-storage:
-    container_name: course-file-storage
+
+  file-storage:
+    container_name: file-storage
     build:
       context: ./course-file-storage
       dockerfile: Dockerfile
@@ -59,12 +48,20 @@ services:
     depends_on:
       mongodatabase:
         condition: service_started
-  localtunnel:
-    image: efrecon/localtunnel
-    container_name: localtunnel
+  mongodatabase:
+    container_name: mongodatabase
+    image: mongo:5.0
     restart: on-failure
-    command:
-      --local-host host.docker.internal --port 8070 --subdomain course-volsu-bot1
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: files
+    volumes:
+      - ./mongodb-data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
   course-bot:
     container_name: course-bot
     build:
@@ -72,9 +69,35 @@ services:
       dockerfile: Dockerfile
     environment:
       - WEBHOOK.PATH=https://course-volsu-bot1.local.lt
-      - CORE_API_URL=http://host.docker.internal:8080
+      - CORE_API_URL=http://core:8080
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     ports:
       - "8070:8070"
       - "5007:5005"
     depends_on:
       - localtunnel
+  redis:
+    image: redis:7.2.4
+    container_name: redis
+    ports:
+      - "6379:6379"
+    environment:
+      - TZ=Europe/Moscow
+  localtunnel:
+    image: efrecon/localtunnel
+    container_name: localtunnel
+    restart: on-failure
+    command:
+      --local-host host.docker.internal --port 8070 --subdomain course-volsu-bot1
+  redis-ui:
+    image: patrikx3/p3x-redis-ui:2022.10.111
+    container_name: redis-ui
+    ports:
+      - "7843:7843"
+    environment:
+      - TZ=Europe/Moscow
+    volumes:
+      - /home/user/p3x-redis-ui-settings:/settings
+    depends_on:
+      - redis

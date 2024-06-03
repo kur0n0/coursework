@@ -13,7 +13,7 @@ import ru.volsu.coursebot.enums.BotSectionEnum;
 import ru.volsu.coursebot.exceptions.BotException;
 import ru.volsu.coursebot.exceptions.CoreException;
 import ru.volsu.coursebot.handler.BotSectionProcessor;
-import ru.volsu.coursebot.service.UserCacheService;
+import ru.volsu.coursebot.service.CacheService;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 public class Bot extends SpringWebhookBot {
 
     @Autowired
-    private UserCacheService userCacheService;
+    private BotSectionProcessor botSectionProcessor;
 
     @Autowired
-    private BotSectionProcessor botSectionProcessor;
+    private CacheService cacheService;
 
     Logger log = LoggerFactory.getLogger(getClass());
 
@@ -50,10 +50,9 @@ public class Bot extends SpringWebhookBot {
             case "Поиск по предмету статьи" -> BotSectionEnum.SEARCH_BY_TAG;
             case "Полный поиск по строке" -> BotSectionEnum.SEARCH_FULL_TEXT;
             case "Решить случайное задание" -> BotSectionEnum.SOLVE_TASK;
-            default -> userCacheService.getBotSectionByUserId(userId);
+            default -> cacheService.getUserContext(userId).getCurrentBotSection();
         };
 
-        userCacheService.setBotSectionForUser(userId, botSectionEnum);
         try {
             return botSectionProcessor.handle(botSectionEnum, update);
         } catch (BotException | CoreException e) {
