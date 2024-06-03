@@ -3,7 +3,6 @@ package ru.volsu.coursebot.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -11,20 +10,15 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import ru.volsu.coursebot.dto.AnswerMappingEnum;
-import ru.volsu.coursebot.dto.ArticleDto;
-import ru.volsu.coursebot.dto.TaskDTO;
+import ru.volsu.coursebot.dto.*;
 import ru.volsu.coursebot.enums.BotSectionEnum;
 import ru.volsu.coursebot.enums.UserCommandEnum;
 import ru.volsu.coursebot.exceptions.BotException;
 import ru.volsu.coursebot.exceptions.CoreException;
 import ru.volsu.coursebot.service.CourseCoreService;
 import ru.volsu.coursebot.service.MessageService;
-import ru.volsu.coursebot.service.UserCacheService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -37,37 +31,29 @@ public class SolveTaskHandler implements MessageHandler {
     private MessageService messageService;
 
     @Autowired
-    private UserCacheService userCacheService;
-
-    @Autowired
     @Qualifier(value = "mainMenuKeyboard")
     private ReplyKeyboardMarkup mainMenuKeyboard;
 
-    private static String ENTER_ANSWER = "Ввести ответ";
-    private static String GET_HINT = "Получить подсказку";
-
-    private Map<Long, UserCommandEnum> userState = new HashMap<>();
-    private Map<Long, ArticleDto> hintCache = new HashMap<>();
-    private Map<Long, TaskDTO> taskCache = new HashMap<>();
+    private static final String ENTER_ANSWER = "Ввести ответ";
+    private static final String GET_HINT = "Получить подсказку";
 
     @Override
-    public BotApiMethod<?> handle(Update update) throws BotException, CoreException {
+    public HandleResult handle(Update update, UserContext userContext) throws BotException, CoreException {
         Message message = update.getMessage();
         User from = message.getFrom();
-        Long userId = from.getId();
         String chatId = message.getChatId().toString();
 
-        UserCommandEnum userCommand = userState.getOrDefault(userId, UserCommandEnum.SHOW_RANDOM_TASK);
+        UserCommandEnum userCommand = Optional.ofNullable(userContext.getLastCommand()).orElse(UserCommandEnum.SHOW_RANDOM_TASK);
         SendMessage.SendMessageBuilder sendMessageBuilder = SendMessage.builder()
                 .chatId(chatId);
         switch (userCommand) {
             case SHOW_RANDOM_TASK -> {
                 Optional<TaskDTO> taskOpt = courseCoreService.getRandomNotSolvedTask(from.getUserName());
-                userState.put(userId, UserCommandEnum.WAIT_ACTION);
+                userContext.setLastCommand(UserCommandEnum.WAIT_ACTION);
                 if (taskOpt.isPresent()) {
                     TaskDTO task = taskOpt.get();
-                    taskCache.put(userId, task);
-                    hintCache.put(userId, task.getHint());
+                    userContext.setTaskDTO(task);
+
                     sendMessageBuilder
                             .text(task.getQuestion())
                             .parseMode("Markdown")
@@ -82,22 +68,22 @@ public class SolveTaskHandler implements MessageHandler {
             case WAIT_ACTION -> {
                 String text = message.getText();
                 if (text.equalsIgnoreCase(ENTER_ANSWER)) {
-                    userState.put(userId, UserCommandEnum.HANDLE_ANSWER);
+                    userContext.setLastCommand(UserCommandEnum.HANDLE_ANSWER);
                     sendMessageBuilder.text("Введите ответ");
                 } else if (text.equalsIgnoreCase(GET_HINT)) {
                     String textToSend = "Подсказка для данного задания отсутствует";
-                    ArticleDto articleDto = hintCache.get(userId);
+                    ArticleDto articleDto = userContext.getTaskDTO().getHint();
                     if (articleDto != null) {
                         messageService.sendArticleMessage(chatId, List.of(articleDto));
                         textToSend = "";
                     }
-                    userState.put(userId, UserCommandEnum.WAIT_ACTION);
+                    userContext.setLastCommand(UserCommandEnum.WAIT_ACTION);
                     sendMessageBuilder.text(textToSend);
                 } else {
-                    userState.remove(userId);
-                    hintCache.remove(userId);
-                    taskCache.remove(userId);
-                    userCacheService.setBotSectionForUser(userId, BotSectionEnum.MAIN_MENU);
+                    userContext.setLastCommand(null);
+                    userContext.setTaskDTO(null);
+                    userContext.setCurrentBotSection(BotSectionEnum.MAIN_MENU);
+
                     sendMessageBuilder
                             .replyMarkup(mainMenuKeyboard)
                             .parseMode("Markdown")
@@ -106,7 +92,7 @@ public class SolveTaskHandler implements MessageHandler {
             }
             case HANDLE_ANSWER -> {
                 String userAnswer = message.getText();
-                TaskDTO taskDTO = taskCache.get(userId);
+                TaskDTO taskDTO = userContext.getTaskDTO();
                 String correctAnswer = taskDTO.getAnswer();
 
                 Object answer = userAnswer;
@@ -120,24 +106,24 @@ public class SolveTaskHandler implements MessageHandler {
                         (taskDTO.getAnswerMapping().equals(AnswerMappingEnum.STRING) && answer.equals(correctAnswer))) {
                     courseCoreService.createSolvedTask(from.getUserName(), taskDTO.getTaskId());
                     text = "Ответ верный!";
-                    userState.remove(userId);
-                    hintCache.remove(userId);
-                    taskCache.remove(userId);
-                    userCacheService.setBotSectionForUser(userId, BotSectionEnum.MAIN_MENU);
+                    userContext.setLastCommand(null);
+                    userContext.setTaskDTO(null);
+                    userContext.setCurrentBotSection(BotSectionEnum.MAIN_MENU);
+
                     sendMessageBuilder
                             .replyMarkup(mainMenuKeyboard)
                             .parseMode("Markdown")
                             .text(text);
                 }
 
-                userState.put(userId, UserCommandEnum.WAIT_ACTION);
+                userContext.setLastCommand(UserCommandEnum.WAIT_ACTION);
                 sendMessageBuilder
                         .text(text);
 
             }
         }
 
-        return sendMessageBuilder.build();
+        return new HandleResult(sendMessageBuilder.build(), userContext);
     }
 
     @Override

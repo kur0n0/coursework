@@ -3,11 +3,16 @@ package ru.volsu.coursebot.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ArticleDto {
+public class ArticleDto implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 7057970305168255541L;
 
     private Integer articleId;
 

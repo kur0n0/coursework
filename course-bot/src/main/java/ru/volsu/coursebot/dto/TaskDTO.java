@@ -1,6 +1,12 @@
 package ru.volsu.coursebot.dto;
 
-public class TaskDTO {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class TaskDTO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 2933042337773322374L;
+
     private Long taskId;
     private ArticleDto hint;
 

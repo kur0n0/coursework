@@ -4,9 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PageInfo {
+public class PageInfo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -7736002594512016344L;
+
     private Integer totalPages;
     private Integer currentPage;
 

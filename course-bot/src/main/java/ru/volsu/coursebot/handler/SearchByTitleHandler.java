@@ -10,18 +10,18 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ru.volsu.coursebot.dto.ArticlePage;
+import ru.volsu.coursebot.dto.HandleResult;
 import ru.volsu.coursebot.dto.PageInfo;
+import ru.volsu.coursebot.dto.UserContext;
 import ru.volsu.coursebot.enums.BotSectionEnum;
 import ru.volsu.coursebot.enums.UserCommandEnum;
 import ru.volsu.coursebot.exceptions.BotException;
 import ru.volsu.coursebot.exceptions.CoreException;
 import ru.volsu.coursebot.service.CourseCoreService;
 import ru.volsu.coursebot.service.MessageService;
-import ru.volsu.coursebot.service.UserCacheService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class SearchByTitleHandler implements MessageHandler {
@@ -40,89 +40,80 @@ public class SearchByTitleHandler implements MessageHandler {
     @Autowired
     private MessageService messageService;
 
-    @Autowired
-    private UserCacheService userCacheService;
-
-    private Map<Long, UserCommandEnum> userState = new HashMap<>();
-    private Map<Long, String> enteredTitle = new HashMap<>();
-    private Map<Long, PageInfo> userPage = new HashMap<>();
-
     @Override
-    public SendMessage handle(Update update) throws BotException, CoreException {
+    public HandleResult handle(Update update, UserContext userContext) throws BotException, CoreException {
         Message message = update.getMessage();
         String text = message.getText();
-        Long userId = update.getMessage().getFrom().getId();
         String chatId = message.getChatId().toString();
-        UserCommandEnum titleState = userState.getOrDefault(userId, UserCommandEnum.ASK_TITLE);
+        UserCommandEnum titleState = Optional.ofNullable(userContext.getLastCommand()).orElse(UserCommandEnum.ASK_TITLE);
 
         SendMessage.SendMessageBuilder sendMessageBuilder = SendMessage.builder()
                 .chatId(chatId);
         switch (titleState) {
             case ASK_TITLE -> {
+                userContext.setLastCommand(UserCommandEnum.ENTER_TITLE);
                 sendMessageBuilder.text("Введите название статьи");
-                userState.put(userId, UserCommandEnum.ENTER_TITLE);
             }
             case ENTER_TITLE -> {
-                enteredTitle.put(userId, text);
+                userContext.setTitleToSearch(text);
+                userContext.setLastCommand(UserCommandEnum.SHOW_PAGE);
+
                 sendMessageBuilder.text("Подтвердите поиск статей");
                 sendMessageBuilder.replyMarkup(continueKeyboard);
                 sendMessageBuilder.parseMode("Markdown");
-                userState.put(userId, UserCommandEnum.SHOW_PAGE);
-                return sendMessageBuilder
-                        .build();
             }
             case SHOW_PAGE -> {
-                PageInfo cachedPageInfo = userPage.getOrDefault(userId, null);
+                PageInfo cachedPageInfo = userContext.getPageInfo();
                 Integer pageNumber = cachedPageInfo == null ? 0 : cachedPageInfo.getCurrentPage();
 
-                ArticlePage articlePage = courseCoreService.getPageByTitle(pageNumber, enteredTitle.getOrDefault(userId, null));
+                ArticlePage articlePage = courseCoreService.getPageByTitle(pageNumber, userContext.getTitleToSearch());
                 PageInfo responsePageInfo = new PageInfo(articlePage.getTotalPages(), articlePage.getCurrentPage());
-                userPage.put(userId, responsePageInfo);
+                userContext.setPageInfo(responsePageInfo);
 
                 messageService.sendArticleMessage(chatId, articlePage.getContent());
+                userContext.setLastCommand(UserCommandEnum.CHOOSE_PAGE);
+
                 sendMessageBuilder.text("Выберите действие");
                 sendMessageBuilder.replyMarkup(getPageKeyboard(responsePageInfo.getCurrentPage(), responsePageInfo.getTotalPages()));
                 sendMessageBuilder.parseMode("Markdown");
-                userState.put(userId, UserCommandEnum.CHOOSE_PAGE);
-                return sendMessageBuilder
-                        .build();
             }
             case CHOOSE_PAGE -> {
-                PageInfo cachedPageInfo = userPage.get(userId);
+                PageInfo cachedPageInfo = userContext.getPageInfo();
                 if (text.equals("Предыдущая страница")) {
                     cachedPageInfo.setCurrentPage(cachedPageInfo.getCurrentPage() - 1);
-                    userState.put(userId, UserCommandEnum.SHOW_PAGE);
-                    userPage.put(userId, cachedPageInfo);
-                    return sendMessageBuilder
+
+                    userContext.setLastCommand(UserCommandEnum.SHOW_PAGE);
+                    userContext.setPageInfo(cachedPageInfo);
+
+                    sendMessageBuilder
                             .replyMarkup(continueKeyboard)
                             .parseMode("Markdown")
-                            .text("Подтвердите действие")
-                            .build();
+                            .text("Подтвердите действие");
                 } else if (text.equals("Следующая страница")) {
                     cachedPageInfo.setCurrentPage(cachedPageInfo.getCurrentPage() + 1);
-                    userState.put(userId, UserCommandEnum.SHOW_PAGE);
-                    userPage.put(userId, cachedPageInfo);
-                    return sendMessageBuilder
+
+                    userContext.setLastCommand(UserCommandEnum.SHOW_PAGE);
+                    userContext.setPageInfo(cachedPageInfo);
+
+                    sendMessageBuilder
                             .replyMarkup(continueKeyboard)
                             .parseMode("Markdown")
-                            .text("Подтвердите действие")
-                            .build();
+                            .text("Подтвердите действие");
                 } else {
-                    userState.remove(userId);
-                    enteredTitle.remove(userId);
-                    userPage.remove(userId);
-                    userCacheService.setBotSectionForUser(userId, BotSectionEnum.MAIN_MENU);
-                    return sendMessageBuilder
+                    userContext.setLastCommand(null);
+                    userContext.setTitleToSearch(null);
+                    userContext.setPageInfo(null);
+                    userContext.setCurrentBotSection(BotSectionEnum.MAIN_MENU);
+
+                    sendMessageBuilder
                             .replyMarkup(mainMenuKeyboard)
                             .parseMode("Markdown")
-                            .text("Переход в главное меню")
-                            .build();
+                            .text("Переход в главное меню");
                 }
             }
         }
 
-        return sendMessageBuilder
-                .build();
+        return new HandleResult(sendMessageBuilder.build(), userContext);
     }
 
     @Override
