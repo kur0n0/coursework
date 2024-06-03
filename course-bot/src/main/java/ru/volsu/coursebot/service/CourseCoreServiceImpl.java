@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -26,6 +27,7 @@ public class CourseCoreServiceImpl implements CourseCoreService {
     private final Integer pageSize = 1;
 
     @Override
+    @Cacheable(value = ArticlePage.SEARCH_BY_TAG_CACHE_NAME, key = "{#tag, #page}")
     public ArticlePage getPageByTag(Integer page, String tag) throws CoreException {
         ResponseEntity<ArticlePage> responseEntity;
         try {
@@ -43,6 +45,7 @@ public class CourseCoreServiceImpl implements CourseCoreService {
     }
 
     @Override
+    @Cacheable(value = ArticlePage.SEARCH_BY_TITLE_CACHE_NAME, key = "{#title, #page}")
     public ArticlePage getPageByTitle(Integer page, String title) throws CoreException {
         ResponseEntity<ArticlePage> responseEntity;
         try {
@@ -60,6 +63,7 @@ public class CourseCoreServiceImpl implements CourseCoreService {
     }
 
     @Override
+    @Cacheable(value = ArticlePage.SEARCH_BY_FULL_TEXT_CACHE_NAME, key = "{#query, #page}")
     public ArticlePage getPageFullTextSearch(Integer page, String query) throws CoreException {
         ResponseEntity<ArticlePage> responseEntity;
         try {

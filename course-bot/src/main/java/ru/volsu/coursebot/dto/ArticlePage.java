@@ -3,11 +3,20 @@ package ru.volsu.coursebot.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ArticlePage {
+public class ArticlePage implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 3218439972342566556L;
+
+    public static final String SEARCH_BY_TAG_CACHE_NAME = "ArticleByTag";
+    public static final String SEARCH_BY_TITLE_CACHE_NAME = "ArticleByTitle";
+    public static final String SEARCH_BY_FULL_TEXT_CACHE_NAME = "ArticleByFullText";
+
     private List<ArticleDto> content;
     private Integer totalPages;
     private Integer currentPage;
