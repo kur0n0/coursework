@@ -44,7 +44,6 @@ public class FullTextSearchHandler implements MessageHandler {
     public HandleResult handle(Update update, UserContext userContext) throws BotException, CoreException {
         Message message = update.getMessage();
         String text = message.getText();
-        Long userId = update.getMessage().getFrom().getId();
         String chatId = message.getChatId().toString();
         UserCommandEnum queryState = Optional.ofNullable(userContext.getLastCommand()).orElse(UserCommandEnum.ASK_STRING_QUERY);
 

@@ -13,9 +13,12 @@ public class ArticlePage implements Serializable {
     @Serial
     private static final long serialVersionUID = 3218439972342566556L;
 
-    public static final String SEARCH_BY_TAG_CACHE_NAME = "ArticleByTag";
-    public static final String SEARCH_BY_TITLE_CACHE_NAME = "ArticleByTitle";
-    public static final String SEARCH_BY_FULL_TEXT_CACHE_NAME = "ArticleByFullText";
+//    public static final String SEARCH_BY_TAG_CACHE_NAME = "ArticleByTag";
+//    public static final String SEARCH_BY_TITLE_CACHE_NAME = "ArticleByTitle";
+//    public static final String SEARCH_BY_FULL_TEXT_CACHE_NAME = "ArticleByFullText";
+
+    public ArticlePage() {
+    }
 
     private List<ArticleDto> content;
     private Integer totalPages;

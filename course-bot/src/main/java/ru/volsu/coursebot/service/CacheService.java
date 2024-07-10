@@ -20,12 +20,12 @@ public class CacheService {
         return null;
     }
 
-    @CacheEvict(value = ArticlePage.SEARCH_BY_TAG_CACHE_NAME, allEntries = true)
+//    @CacheEvict(value = ArticlePage.SEARCH_BY_TAG_CACHE_NAME, allEntries = true)
     public void clearByTagCache() {}
 
-    @CacheEvict(value = ArticlePage.SEARCH_BY_TITLE_CACHE_NAME, allEntries = true)
+//    @CacheEvict(value = ArticlePage.SEARCH_BY_TITLE_CACHE_NAME, allEntries = true)
     public void clearByTitle() {}
 
-    @CacheEvict(value = ArticlePage.SEARCH_BY_FULL_TEXT_CACHE_NAME, allEntries = true)
+//    @CacheEvict(value = ArticlePage.SEARCH_BY_FULL_TEXT_CACHE_NAME, allEntries = true)
     public void clearByFullText() {}
 }

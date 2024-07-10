@@ -75,7 +75,7 @@ public class SolveTaskHandler implements MessageHandler {
                     ArticleDto articleDto = userContext.getTaskDTO().getHint();
                     if (articleDto != null) {
                         messageService.sendArticleMessage(chatId, List.of(articleDto));
-                        textToSend = "";
+                        textToSend = "К сожалению подсказки нет :(";
                     }
                     userContext.setLastCommand(UserCommandEnum.WAIT_ACTION);
                     sendMessageBuilder.text(textToSend);
@@ -100,7 +100,7 @@ public class SolveTaskHandler implements MessageHandler {
                     answer = Long.parseLong(userAnswer);
                 }
 
-                String text = "Ответ неправильный, попробуйте еще раз!"; // todo неправильно работает кейс с неправильным ответом
+                String text = "Ответ неправильный, попробуйте еще раз!";
                 courseCoreService.createTaskHistory(taskDTO.getTaskId(), from.getUserName(), answer.toString());
                 if ((taskDTO.getAnswerMapping().equals(AnswerMappingEnum.LONG) && answer.equals(Long.parseLong(correctAnswer))) ||
                         (taskDTO.getAnswerMapping().equals(AnswerMappingEnum.STRING) && answer.equals(correctAnswer))) {
