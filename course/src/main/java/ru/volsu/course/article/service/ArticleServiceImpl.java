@@ -18,8 +18,8 @@ import ru.volsu.commons.dto.ArticleDto;
 import ru.volsu.commons.dto.ArticlePageDto;
 import ru.volsu.commons.dto.FileDto;
 import ru.volsu.course.article.dao.ArticleRepository;
-import ru.volsu.course.article.model.ArticleMapper;
 import ru.volsu.course.article.model.Article;
+import ru.volsu.course.article.model.ArticleMapper;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
