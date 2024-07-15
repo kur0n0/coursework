@@ -8,6 +8,7 @@
       </settings>
     </deployment>
     <method v="2">
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/commons/pom.xml" goal="clean package install" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/course/pom.xml" goal="clean package" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/course-file-storage/pom.xml" goal="clean package" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/course-bot/pom.xml" goal="clean package -Dmaven.test.skip=true" />
