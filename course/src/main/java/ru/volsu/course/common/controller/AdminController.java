@@ -8,10 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.commons.dto.ArticleDto;
-import ru.volsu.course.task.model.enums.AnswerMappingEnum;
 import ru.volsu.course.article.model.Article;
-import ru.volsu.course.task.model.Task;
 import ru.volsu.course.article.service.ArticleService;
+import ru.volsu.course.task.model.Task;
+import ru.volsu.course.task.model.enums.AnswerMappingEnum;
 import ru.volsu.course.task.service.TaskService;
 
 import java.util.List;

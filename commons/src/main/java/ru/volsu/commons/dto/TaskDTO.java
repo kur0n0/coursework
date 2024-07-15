@@ -1,6 +1,15 @@
 package ru.volsu.commons.dto;
 
-public class TaskDTO {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class TaskDTO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -5509848997815705727L;
+
+    public static final String ANSWER_MAPPING_LONG = "LONG";
+    public static final String ANSWER_MAPPING_STRING = "STRING";
 
     private Long taskId;
 

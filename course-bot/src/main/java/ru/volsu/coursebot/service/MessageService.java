@@ -13,9 +13,9 @@ import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.volsu.commons.dto.ArticleDto;
+import ru.volsu.commons.dto.FileDto;
 import ru.volsu.coursebot.exceptions.BotException;
-import ru.volsu.coursebot.dto.ArticleDto;
-import ru.volsu.coursebot.dto.FileDto;
 
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
@@ -83,8 +83,8 @@ public class MessageService {
         try {
             bot.execute(SendMediaGroup
                     .builder()
-                            .chatId(chatId)
-                            .medias(inputMediaList)
+                    .chatId(chatId)
+                    .medias(inputMediaList)
                     .build());
         } catch (TelegramApiException e) {
             log.error("Ошибка при отправке информации о статье: {}", e.getMessage());

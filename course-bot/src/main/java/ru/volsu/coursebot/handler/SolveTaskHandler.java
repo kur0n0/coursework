@@ -10,7 +10,10 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import ru.volsu.coursebot.dto.*;
+import ru.volsu.commons.dto.ArticleDto;
+import ru.volsu.commons.dto.TaskDTO;
+import ru.volsu.coursebot.dto.HandleResult;
+import ru.volsu.coursebot.dto.UserContext;
 import ru.volsu.coursebot.enums.BotSectionEnum;
 import ru.volsu.coursebot.enums.UserCommandEnum;
 import ru.volsu.coursebot.exceptions.BotException;
@@ -96,14 +99,14 @@ public class SolveTaskHandler implements MessageHandler {
                 String correctAnswer = taskDTO.getAnswer();
 
                 Object answer = userAnswer;
-                if (taskDTO.getAnswerMapping().equals(AnswerMappingEnum.LONG)) {
+                if (taskDTO.getAnswerMapping().equals(TaskDTO.ANSWER_MAPPING_LONG)) {
                     answer = Long.parseLong(userAnswer);
                 }
 
                 String text = "Ответ неправильный, попробуйте еще раз!";
                 courseCoreService.createTaskHistory(taskDTO.getTaskId(), from.getUserName(), answer.toString());
-                if ((taskDTO.getAnswerMapping().equals(AnswerMappingEnum.LONG) && answer.equals(Long.parseLong(correctAnswer))) ||
-                        (taskDTO.getAnswerMapping().equals(AnswerMappingEnum.STRING) && answer.equals(correctAnswer))) {
+                if ((taskDTO.getAnswerMapping().equals(TaskDTO.ANSWER_MAPPING_LONG) && answer.equals(Long.parseLong(correctAnswer))) ||
+                        (taskDTO.getAnswerMapping().equals(TaskDTO.ANSWER_MAPPING_STRING) && answer.equals(correctAnswer))) {
                     courseCoreService.createSolvedTask(from.getUserName(), taskDTO.getTaskId());
                     text = "Ответ верный!";
                     userContext.setLastCommand(null);

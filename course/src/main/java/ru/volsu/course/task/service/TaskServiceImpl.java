@@ -10,10 +10,10 @@ import ru.volsu.course.article.service.ArticleService;
 import ru.volsu.course.task.dao.SolvedTaskRepository;
 import ru.volsu.course.task.dao.TaskHistoryRepository;
 import ru.volsu.course.task.dao.TaskRepository;
-import ru.volsu.course.task.model.TaskMapper;
 import ru.volsu.course.task.model.SolvedTask;
 import ru.volsu.course.task.model.Task;
 import ru.volsu.course.task.model.TaskHistory;
+import ru.volsu.course.task.model.TaskMapper;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

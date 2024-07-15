@@ -15,7 +15,7 @@
     <p>Текст статьи: <span th:text="${articleDto.text}"/></p>
     <p>Файлы</p>
     <p th:each="fileDto: ${articleDto.fileDtoList}">
-        <img width="350" height="350" th:src="@{'data:image/jpg;base64,'+${fileDto.file}}" />
+        <img width="350" height="350" th:src="@{'data:image/jpg;base64,'+${fileDto.file}}"/>
     </p>
 </div>
 

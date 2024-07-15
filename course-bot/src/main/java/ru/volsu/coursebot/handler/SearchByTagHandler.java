@@ -9,7 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import ru.volsu.coursebot.dto.*;
+import ru.volsu.commons.dto.ArticleDto;
+import ru.volsu.commons.dto.ArticlePageDto;
+import ru.volsu.coursebot.dto.HandleResult;
+import ru.volsu.coursebot.dto.PageInfo;
+import ru.volsu.coursebot.dto.UserContext;
 import ru.volsu.coursebot.enums.BotSectionEnum;
 import ru.volsu.coursebot.enums.UserCommandEnum;
 import ru.volsu.coursebot.exceptions.BotException;
@@ -63,7 +67,7 @@ public class SearchByTagHandler implements MessageHandler {
                 PageInfo cachedPageInfo = userContext.getPageInfo();
                 Integer pageNumber = cachedPageInfo == null ? 0 : cachedPageInfo.getCurrentPage();
 
-                ArticlePage articlePage = courseCoreService.getPageByTag(pageNumber, userContext.getTagToSearch());
+                ArticlePageDto articlePage = courseCoreService.getPageByTag(pageNumber, userContext.getTagToSearch());
                 PageInfo responsePageInfo = new PageInfo(articlePage.getTotalPages(), articlePage.getCurrentPage());
                 userContext.setPageInfo(responsePageInfo);
 

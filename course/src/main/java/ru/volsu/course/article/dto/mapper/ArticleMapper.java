@@ -12,5 +12,6 @@ import java.util.List;
 public interface ArticleMapper {
 
     ArticleDto toDto(Article article, List<FileDto> fileDtoList);
+
     ArticlePageDto toDtoPage(List<ArticleDto> content, Integer currentPage, Integer totalPages);
 }

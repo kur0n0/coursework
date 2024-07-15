@@ -1,5 +1,6 @@
 package ru.volsu.coursebot.dto;
 
+import ru.volsu.commons.dto.TaskDTO;
 import ru.volsu.coursebot.enums.BotSectionEnum;
 import ru.volsu.coursebot.enums.UserCommandEnum;
 
