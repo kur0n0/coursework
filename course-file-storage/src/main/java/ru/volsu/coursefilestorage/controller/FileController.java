@@ -7,9 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.volsu.commons.dto.FileRequest;
 import ru.volsu.coursefilestorage.model.File;
 import ru.volsu.coursefilestorage.model.FileDto;
-import ru.volsu.coursefilestorage.model.FileRequest;
 import ru.volsu.coursefilestorage.service.FileService;
 
 import java.io.IOException;

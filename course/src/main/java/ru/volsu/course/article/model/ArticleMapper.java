@@ -1,4 +1,4 @@
-package ru.volsu.course.article.dto.mapper;
+package ru.volsu.course.article.model;
 
 import org.mapstruct.Mapper;
 import ru.volsu.commons.dto.ArticleDto;

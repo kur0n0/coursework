@@ -1,4 +1,4 @@
-package ru.volsu.course.article.dto;
+package ru.volsu.commons.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

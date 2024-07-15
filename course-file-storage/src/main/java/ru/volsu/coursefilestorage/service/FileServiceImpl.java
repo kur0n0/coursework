@@ -2,10 +2,10 @@ package ru.volsu.coursefilestorage.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.volsu.commons.dto.FileRequest;
 import ru.volsu.coursefilestorage.dao.FileRepository;
 import ru.volsu.coursefilestorage.model.File;
 import ru.volsu.coursefilestorage.model.FileDto;
-import ru.volsu.coursefilestorage.model.FileRequest;
 
 import java.util.List;
 import java.util.NoSuchElementException;

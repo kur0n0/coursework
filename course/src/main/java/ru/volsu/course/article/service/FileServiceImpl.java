@@ -17,7 +17,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.commons.dto.FileDto;
-import ru.volsu.course.article.dto.FileRequest;
+import ru.volsu.commons.dto.FileRequest;
 
 import java.util.Arrays;
 import java.util.List;
