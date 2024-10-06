@@ -8,6 +8,9 @@ import java.util.List;
 public class FileRequest {
     private List<String> uuidList;
 
+    public FileRequest() {
+    }
+
     public FileRequest(List<String> uuidList) {
         this.uuidList = uuidList;
     }

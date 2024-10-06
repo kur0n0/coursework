@@ -23,6 +23,13 @@ public class ArticleController {
         return articleService.findByTag(tag, PageRequest.of(page, size));
     }
 
+    @GetMapping(value = "/tag/page/concurrently")
+    public ArticlePageDto getPageByTagConcurrently(@RequestParam Integer page,
+                                                   @RequestParam Integer size,
+                                                   @RequestParam String tag) throws Exception {
+        return articleService.findByTagConcurrently(tag, PageRequest.of(page, size));
+    }
+
     @GetMapping(value = "/title/page")
     public ArticlePageDto getPageByTitle(@RequestParam Integer page,
                                          @RequestParam Integer size,

@@ -15,14 +15,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 import ru.volsu.commons.dto.FileDto;
 import ru.volsu.commons.dto.FileRequest;
+import ru.volsu.course.common.dto.InnerFileDto;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -34,16 +32,15 @@ public class FileServiceImpl implements FileService {
     private RestTemplate restTemplate;
 
     @Override
-    public String createFile(MultipartFile file, Integer articleId) throws Exception {
+    public String createFile(InnerFileDto file, Integer articleId) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-        map.add("title", Optional.ofNullable(file.getOriginalFilename())
-                .orElse(UUID.randomUUID().toString()));
+        map.add("title", file.getFileName());
 
         LinkedMultiValueMap<String, String> fileHeaderMap = new LinkedMultiValueMap<>();
-        fileHeaderMap.add("Content-disposition", "form-data; name=file; filename=" + file.getOriginalFilename());
+        fileHeaderMap.add("Content-disposition", "form-data; name=file; filename=" + file.getFileName());
         map.add("file", new HttpEntity<>(file.getBytes(), fileHeaderMap));
 
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, headers);

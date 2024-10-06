@@ -28,4 +28,6 @@ public interface ArticleService {
     ArticlePageDto fullTextSearch(String query, PageRequest pageRequest) throws Exception;
 
     Optional<Article> findByTitle(String articleTitleHint);
+
+    ArticlePageDto findByTagConcurrently(String tag, PageRequest pageRequest) throws Exception;
 }
