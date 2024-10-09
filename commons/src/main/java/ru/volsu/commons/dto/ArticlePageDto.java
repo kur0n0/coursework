@@ -19,6 +19,9 @@ public class ArticlePageDto {
         this.totalPages = totalPages;
     }
 
+    public ArticlePageDto() {
+    }
+
     public List<ArticleDto> getContent() {
         return content;
     }

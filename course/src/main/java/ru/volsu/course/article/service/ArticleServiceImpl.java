@@ -56,7 +56,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ArticleDto getOne(Integer articleId) throws Exception {
         Article article = findById(articleId);
-        List<FileDto> files = fileService.getFiles(article.getFilesUuidList(), articleId);
+        List<FileDto> files = fileService.getFiles(article.getFilesUuidList());
 
         return articleMapper.toDto(article, files);
     }
@@ -73,7 +73,7 @@ public class ArticleServiceImpl implements ArticleService {
         CompletableFuture.supplyAsync(() -> {
             log.debug("Сохранена статья с id: " + articleToSave.getArticleId());
             return articleRepository.save(articleToSave);
-        }).thenCombine(createFiles(innerFileDtoList, article.getArticleId()), (art, fileList) -> {
+        }).thenCombine(createFiles(innerFileDtoList), (art, fileList) -> {
             art.setFilesUuidList(fileList);
             return articleRepository.save(art);
         }).handle((res, ex) -> {
@@ -99,23 +99,25 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticlePageDto findByTag(String tag, PageRequest pageRequest) throws Exception {
-        long start = System.currentTimeMillis();
+        log.debug("Запущен поиск по тэгу: {}, страница: {}, размер страницы: {}", tag, pageRequest.getPageNumber(), pageRequest.getPageSize());
         Page<Article> articlePage = articleRepository.findByTagContaining(tag, pageRequest);
+        log.debug("Поиск по тэгу: {} вернул {} страниц", tag, articlePage.getTotalPages());
         ArticlePageDto articleFilesDto = getArticleFilesDto(articlePage);
-        long end = System.currentTimeMillis();
-        log.info("Выполнение метода заняло: {} мс", end - start);
 
         return articleFilesDto;
     }
 
     @Override
     public ArticlePageDto findByTitle(String title, PageRequest pageRequest) throws Exception { // todo: подумать, как можно убрать дублирование кода, возможно добавить спецификацию для запроса в бд с пагинацией
+        log.debug("Запущен поиск по названию статьи: {}, страница: {}, размер страницы: {}", title, pageRequest.getPageNumber(), pageRequest.getPageSize());
         Page<Article> articlePage = articleRepository.findByTitleContaining(title, pageRequest);
+        log.debug("Поиск по названию статьи: {} вернул {} страниц", title, articlePage.getTotalPages());
         return getArticleFilesDto(articlePage);
     }
 
     @Override
     public ArticlePageDto fullTextSearch(String queryString, PageRequest pageRequest) throws Exception {
+        log.debug("Запущен полнотекстный поиск по запросу: {}, страница: {}, размер страницы: {}", queryString, pageRequest.getPageNumber(), pageRequest.getPageSize());
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 
         QueryBuilder queryBuilder = fullTextEntityManager
@@ -143,6 +145,7 @@ public class ArticleServiceImpl implements ArticleService {
         Integer totalResult = fullTextQuery.getResultSize();
 
         Integer totalPages = totalResult / size + (totalResult % size == 0 ? 0 : 1);
+        log.debug("Полнотекстный поиск по запросу: {} вернул {} страниц", queryString, totalPages);
 
         return getArticleFilesDto(resultList, page, totalPages);
     }
@@ -171,19 +174,19 @@ public class ArticleServiceImpl implements ArticleService {
     private CompletionStage<List<FileDto>> getFiles(Article article) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                return fileService.getFiles(article.getFilesUuidList(), article.getArticleId());
+                return fileService.getFiles(article.getFilesUuidList());
             } catch (Exception e) {
                 throw new RuntimeException("Ошибка при получении файлов: " + e);
             }
         }).exceptionally(e -> Collections.emptyList());
     }
 
-    private CompletionStage<List<String>> createFiles(List<InnerFileDto> innerFileDtoList, Integer articleId) {
+    private CompletionStage<List<String>> createFiles(List<InnerFileDto> innerFileDtoList) {
         return CompletableFuture.supplyAsync(() -> {
             List<String> result = new ArrayList<>();
             for (InnerFileDto file : innerFileDtoList) {
                 try {
-                    result.add(fileService.createFile(file, articleId));
+                    result.add(fileService.createFile(file));
                 } catch (Exception e) {
                     throw new RuntimeException("Ошибка при создании файлов: " + e);
                 }
@@ -198,7 +201,7 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticlePageDto getArticleFilesDto(Page<Article> articlePage) throws Exception {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for (Article article : articlePage.getContent()) {
-            List<FileDto> files = fileService.getFiles(article.getFilesUuidList(), article.getArticleId());
+            List<FileDto> files = fileService.getFiles(article.getFilesUuidList());
             articleDtoList.add(articleMapper.toDto(article, files));
         }
         return articleMapper.toDtoPage(articleDtoList, articlePage.getNumber(), articlePage.getTotalPages());
@@ -207,7 +210,7 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticlePageDto getArticleFilesDto(List<Article> articles, Integer currentPage, Integer totalPages) throws Exception {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for (Article article : articles) {
-            List<FileDto> files = fileService.getFiles(article.getFilesUuidList(), article.getArticleId());
+            List<FileDto> files = fileService.getFiles(article.getFilesUuidList());
             articleDtoList.add(articleMapper.toDto(article, files));
         }
 

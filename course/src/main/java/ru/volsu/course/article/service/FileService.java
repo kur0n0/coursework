@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FileService {
 
-    String createFile(InnerFileDto file, Integer articleId) throws Exception;
+    String createFile(InnerFileDto file) throws Exception;
 
-    List<FileDto> getFiles(List<String> uuidList, Integer articleId) throws Exception;
+    List<FileDto> getFiles(List<String> uuidList) throws Exception;
 }
